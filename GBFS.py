@@ -1,4 +1,10 @@
-from pythonds.graphs import Graph
+from pythonds.graphs import Graph, Vertex
+
+# extends the Vertex class imported from pythonds to include a heuristic value
+class VertexHeuristic(Vertex):
+    def _init__(self, node_name, heuristic_val):
+        super().__init__(node_name)
+        self.heuristic_val = heuristic_val
 
 # undirected_connect Connects two nodes together (Undirected)
 # graph is the graph
@@ -11,8 +17,6 @@ def undirected_connect(graph, one, two):
 # Main function
 def main():
     graph = Graph()
-
-    undirected_connect(graph, "Eatery1", "Name2")
 
 if __name__ == '__main__':
     main()
