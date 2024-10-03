@@ -8,5 +8,5 @@ Repository for CSINTSY MCO1 - State Based Model
 - Julian, Jedidiah
 - Luis, Owen
 
-** Google Docs **
+**Google Docs*
 - [Link](https://docs.google.com/document/d/1tX8GdP2rEPjn1J8lzJWK8shfZyMGyNaMdjYUHH1DIsY/edit)
