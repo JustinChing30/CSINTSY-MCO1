@@ -14,16 +14,14 @@ def undirected_connect(graph, one, two):
 # one is first node
 # two is second node
 # weight is the weight of the edge
-def directed_weighted_connect(graph, one, two, weight):
-    graph.addEdge(one, two, weight)
+def directed_connect(graph, one, two):
+    graph.addEdge(one, two)
 
 # Main function
 def main():
     graph = Graph()
 
-    undirected_connect(graph, "Name1", "Name2")
-    undirected_connect(graph, "Name1", "Name3")
-    undirected_connect(graph, "Name2", "Name3")
+    undirected_connect(graph, "Eatery1", "Name2")
 
 if __name__ == '__main__':
     main()
