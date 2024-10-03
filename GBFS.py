@@ -44,7 +44,6 @@ def main():
     U = VertexHeuristic("Fidel A. Reyes St.", 0) # Goal
 
     # Add vertices to graph
-
     graph.addVertex(A)
     graph.addVertex(B)
     graph.addVertex(C)
