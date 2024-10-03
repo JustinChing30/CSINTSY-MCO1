@@ -43,5 +43,29 @@ def main():
     T = VertexHeuristic("P. Ocampo St.", 20)
     U = VertexHeuristic("Fidel A. Reyes St.", 0) # Goal
 
+    # Add vertices to graph
+
+    graph.addVertex(A)
+    graph.addVertex(B)
+    graph.addVertex(C)
+    graph.addVertex(D)
+    graph.addVertex(E)
+    graph.addVertex(F)
+    graph.addVertex(G)
+    graph.addVertex(H)
+    graph.addVertex(I)
+    graph.addVertex(J)
+    graph.addVertex(K)
+    graph.addVertex(L)
+    graph.addVertex(M)
+    graph.addVertex(N)
+    graph.addVertex(O)
+    graph.addVertex(P)
+    graph.addVertex(Q)
+    graph.addVertex(R)
+    graph.addVertex(S)
+    graph.addVertex(T)
+    graph.addVertex(U)
+
 if __name__ == '__main__':
     main()
