@@ -16,7 +16,32 @@ def undirected_connect(graph, one, two):
 
 # Main function
 def main():
+    # Create graph
     graph = Graph()
+
+    # Create vertices with heuristic values
+    # 0 heuristic value = goal
+    A = VertexHeuristic("University Mall", 3)
+    B = VertexHeuristic("McDonald's", 7)
+    C = VertexHeuristic("Perico's", 10)
+    D = VertexHeuristic("Bloemen Hall", 2)
+    E = VertexHeuristic("W.H. Taft Residence", 2)
+    F = VertexHeuristic("EGI Taft", 5)
+    G = VertexHeuristic("Castro Street", 8)
+    H = VertexHeuristic("Agno Food Court", 1)
+    I = VertexHeuristic("One Archers'", 19)
+    J = VertexHeuristic("La Casita", 11)
+    K = VertexHeuristic("Green Mall", 3)
+    L = VertexHeuristic("Green Court", 9)
+    M = VertexHeuristic("Sherwood", 15)
+    N = VertexHeuristic("Jollibee", 3)
+    O = VertexHeuristic("Dagonoy St.", 16)
+    P = VertexHeuristic("Burgundy", 4)
+    Q = VertexHeuristic("Estrada St.", 16)
+    R = VertexHeuristic("D'Student's Place", 5)
+    S = VertexHeuristic("Leon Guinto St.", 1)
+    T = VertexHeuristic("P. Ocampo St.", 20)
+    U = VertexHeuristic("Fidel A. Reyes St.", 0) # Goal
 
 if __name__ == '__main__':
     main()
