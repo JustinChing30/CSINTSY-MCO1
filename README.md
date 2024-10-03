@@ -9,4 +9,4 @@ Repository for CSINTSY MCO1 - State Based Model
 - Luis, Owen
 
 ### Google Docs
-- [Link] (https://docs.google.com/document/d/1tX8GdP2rEPjn1J8lzJWK8shfZyMGyNaMdjYUHH1DIsY/edit)
+- [Link](https://docs.google.com/document/d/1tX8GdP2rEPjn1J8lzJWK8shfZyMGyNaMdjYUHH1DIsY/edit)
