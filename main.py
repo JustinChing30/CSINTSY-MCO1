@@ -9,14 +9,6 @@ def undirected_connect(graph, one, two):
     graph.addEdge(one, two)
     graph.addEdge(two, one)
 
-# directed_weighted_connect Connects a node to another node (Directed from one to two)
-# graph is the graph
-# one is first node
-# two is second node
-# weight is the weight of the edge
-def directed_connect(graph, one, two):
-    graph.addEdge(one, two)
-
 # Main function
 def main():
     graph = Graph()
