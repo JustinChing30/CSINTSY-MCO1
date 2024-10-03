@@ -1,5 +1,4 @@
 from pythonds.graphs import Graph
-from pythonds.basic import Stack, Queue
 
 # undirected_connect Connects two nodes together (Undirected)
 # graph is the graph
