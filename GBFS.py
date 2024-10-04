@@ -1,10 +1,18 @@
 from pythonds.graphs import Graph, Vertex
+import heapq
 
 # extends the Vertex class imported from pythonds to include a heuristic value
 class VertexHeuristic(Vertex):
     def _init__(self, node_name, heuristic_val):
         super().__init__(node_name)
         self.heuristic_val = heuristic_val
+
+def gbfs(graph, start, goal):
+    toExplore = [] # List of nodes to explore
+    explored = set() # Set of nodes already explored
+
+    heapq.heappush(toExplore, (start.heuristic_val, start))
+
 
 # undirected_connect Connects two nodes together (Undirected)
 # graph is the graph
