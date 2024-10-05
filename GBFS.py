@@ -3,7 +3,7 @@ import heapq
 
 # extends the Vertex class imported from pythonds to include a heuristic value
 class VertexHeuristic(Vertex):
-    def _init__(self, node_name, heuristic_val):
+    def __init__(self, node_name, heuristic_val):
         super().__init__(node_name)
         self.heuristic_val = heuristic_val
 
@@ -13,6 +13,19 @@ def gbfs(graph, start, goal):
 
     heapq.heappush(toExplore, (start.heuristic_val, start))
 
+    while toExplore: # Implicit boolean
+        cur_heuristic, cur_vertex = heapq.heappop(toExplore) # Pops smallest value
+
+        if cur_vertex == goal:
+            print("path to goal will be here") # path to goal
+
+        explored.add(cur_vertex)
+
+        for connected in cur_vertex.getConnections(): # checks connected nodes to current node
+            if connected in explored:
+                continue # basically this ignores that already explored node
+
+            # another if here
 
 # undirected_connect Connects two nodes together (Undirected)
 # graph is the graph
