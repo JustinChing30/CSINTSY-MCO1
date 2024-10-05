@@ -7,25 +7,32 @@ class VertexHeuristic(Vertex):
         super().__init__(node_name)
         self.heuristic_val = heuristic_val
 
-def gbfs(graph, start, goal):
+def gbfs(start, goal):
     toExplore = [] # List of nodes to explore
     explored = set() # Set of nodes already explored
+    pathTrack = [] # Stores path to goal
 
     heapq.heappush(toExplore, (start.heuristic_val, start))
+    pathTrack.append([start]) # Initialize pathTrack
 
     while toExplore: # Implicit boolean
         cur_heuristic, cur_vertex = heapq.heappop(toExplore) # Pops smallest value
 
         if cur_vertex == goal:
-            print("path to goal will be here") # path to goal
+            print("Path to goal: ", pathTrack[-1]) # Path to goal
+            break
 
         explored.add(cur_vertex)
 
         for connected in cur_vertex.getConnections(): # checks connected nodes to current node
+
             if connected in explored:
                 continue # basically this ignores that already explored node
 
-            # another if here
+            new_path = pathTrack[-1] + [connected] # Concatenation for path
+            pathTrack.append(new_path) # Stores a bunch of paths, but we only take the last one anyway
+
+            heapq.heappush(toExplore, (connected.heuristic_val, connected))
 
 # undirected_connect Connects two nodes together (Undirected)
 # graph is the graph
@@ -65,27 +72,13 @@ def main():
     U = VertexHeuristic("Fidel A. Reyes St.", 0) # Goal
 
     # Add vertices to graph
-    graph.addVertex(A)
-    graph.addVertex(B)
-    graph.addVertex(C)
-    graph.addVertex(D)
-    graph.addVertex(E)
-    graph.addVertex(F)
-    graph.addVertex(G)
-    graph.addVertex(H)
-    graph.addVertex(I)
-    graph.addVertex(J)
-    graph.addVertex(K)
-    graph.addVertex(L)
-    graph.addVertex(M)
-    graph.addVertex(N)
-    graph.addVertex(O)
-    graph.addVertex(P)
-    graph.addVertex(Q)
-    graph.addVertex(R)
-    graph.addVertex(S)
-    graph.addVertex(T)
-    graph.addVertex(U)
+    vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]
+    for vertex in vertices:
+        graph.addVertex(vertex)
+
+    # Add connections between vertices
+
+    gbfs(A, U)
 
 if __name__ == '__main__':
     main()
