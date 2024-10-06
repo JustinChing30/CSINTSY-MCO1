@@ -49,7 +49,7 @@ def main():
     C = Vertex("Perico's", 3)
     D = Vertex("Bloemen Hall", 1)
     E = Vertex("W.H. Taft Residence", 2)
-    F = Vertex("EGI Taft", 10)
+    F = Vertex("EGI Taft", 50)
     G = Vertex("Castro Street", 11)
     H = Vertex("Agno Food Court", 1)
     I = Vertex("One Archers'", 19)
