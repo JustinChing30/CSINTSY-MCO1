@@ -1,46 +1,41 @@
 from pythonds.graphs import Graph, Vertex
 import heapq
 
-# extends the Vertex class imported from pythonds to include a heuristic value
-class VertexHeuristic(Vertex):
-    def __init__(self, node_name, heuristic_val):
-        super().__init__(node_name)
-        self.heuristic_val = heuristic_val
-
-def gbfs(start, goal):
+def gbfs(graph, start, goal):
     toExplore = [] # List of nodes to explore
     explored = set() # Set of nodes already explored
-    pathTrack = [] # Stores path to goal
+    pathTrack = {start.getId(): [start]} # Stores path to goal
 
-    heapq.heappush(toExplore, (start.heuristic_val, start))
-    pathTrack.append([start]) # Initialize pathTrack
+    heapq.heappush(toExplore, (start.getHeuristic(), start))
 
     while toExplore: # Implicit boolean
         cur_heuristic, cur_vertex = heapq.heappop(toExplore) # Pops smallest value
 
-        if cur_vertex == goal:
-            print("Path to goal: ", pathTrack[-1]) # Path to goal
+        if cur_vertex.getId() == goal.getId():
+            print("Path to goal:", " -> ".join(v.getId() for v in pathTrack[cur_vertex.getId()])) # Path to goal
             break
 
-        explored.add(cur_vertex)
+        explored.add(cur_vertex.getId())
 
-        for connected in cur_vertex.getConnections(): # checks connected nodes to current node
+        current_vertex = graph.getVertex(cur_vertex.getId())
 
-            if connected in explored:
+        for connected in current_vertex.getConnections(): # checks connected nodes to current node
+
+            if connected.getId() in explored:
                 continue # basically this ignores that already explored node
 
-            new_path = pathTrack[-1] + [connected] # Concatenation for path
-            pathTrack.append(new_path) # Stores a bunch of paths, but we only take the last one anyway
+            if connected.getId() not in pathTrack:
+                pathTrack[connected.getId()] = pathTrack[cur_vertex.getId()] + [connected]
 
-            heapq.heappush(toExplore, (connected.heuristic_val, connected))
+            heapq.heappush(toExplore, (connected.getHeuristic(), connected))
 
 # undirected_connect Connects two nodes together (Undirected)
 # graph is the graph
 # one is first node
 # two is second node
 def undirected_connect(graph, one, two):
-    graph.addEdge(one, two)
-    graph.addEdge(two, one)
+    graph.addEdge(one.getId(), two.getId())
+    graph.addEdge(two.getId(), one.getId())
 
 # Main function
 def main():
@@ -49,36 +44,45 @@ def main():
 
     # Create vertices with heuristic values
     # 0 heuristic value = goal
-    A = VertexHeuristic("University Mall", 3)
-    B = VertexHeuristic("McDonald's", 7)
-    C = VertexHeuristic("Perico's", 10)
-    D = VertexHeuristic("Bloemen Hall", 2)
-    E = VertexHeuristic("W.H. Taft Residence", 2)
-    F = VertexHeuristic("EGI Taft", 5)
-    G = VertexHeuristic("Castro Street", 8)
-    H = VertexHeuristic("Agno Food Court", 1)
-    I = VertexHeuristic("One Archers'", 19)
-    J = VertexHeuristic("La Casita", 11)
-    K = VertexHeuristic("Green Mall", 3)
-    L = VertexHeuristic("Green Court", 9)
-    M = VertexHeuristic("Sherwood", 15)
-    N = VertexHeuristic("Jollibee", 3)
-    O = VertexHeuristic("Dagonoy St.", 16)
-    P = VertexHeuristic("Burgundy", 4)
-    Q = VertexHeuristic("Estrada St.", 16)
-    R = VertexHeuristic("D'Student's Place", 5)
-    S = VertexHeuristic("Leon Guinto St.", 1)
-    T = VertexHeuristic("P. Ocampo St.", 20)
-    U = VertexHeuristic("Fidel A. Reyes St.", 0) # Goal
+    A = Vertex("University Mall", 25)
+    B = Vertex("McDonald's", 5)
+    C = Vertex("Perico's", 3)
+    D = Vertex("Bloemen Hall", 1)
+    E = Vertex("W.H. Taft Residence", 2)
+    F = Vertex("EGI Taft", 10)
+    G = Vertex("Castro Street", 11)
+    H = Vertex("Agno Food Court", 1)
+    I = Vertex("One Archers'", 19)
+    J = Vertex("La Casita", 0)
+    K = Vertex("Green Mall", 3)
+    L = Vertex("Green Court", 9)
+    M = Vertex("Sherwood", 15)
+    N = Vertex("Jollibee", 3)
+    O = Vertex("Dagonoy St.", 16)
+    P = Vertex("Burgundy", 4)
+    Q = Vertex("Estrada St.", 16)
+    R = Vertex("D'Student's Place", 5)
+    S = Vertex("Leon Guinto St.", 1)
+    T = Vertex("P. Ocampo St.", 20)
+    U = Vertex("Fidel A. Reyes St.", 0) # Goal
 
     # Add vertices to graph
     vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]
     for vertex in vertices:
-        graph.addVertex(vertex)
+        graph.addVertex(vertex.getId(), vertex.getHeuristic())
 
     # Add connections between vertices
+    undirected_connect(graph, B, E)
+    undirected_connect(graph, E, G)
+    undirected_connect(graph, G, J)
+    undirected_connect(graph, E, A)
+    undirected_connect(graph, A, J)
+    undirected_connect(graph, B, D)
+    undirected_connect(graph, D, A)
+    undirected_connect(graph, D, F)
+    undirected_connect(graph, F, J)
 
-    gbfs(A, U)
+    gbfs(graph, B, J)
 
 if __name__ == '__main__':
     main()
