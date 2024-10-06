@@ -1,43 +1,49 @@
 from pythonds.graphs import Graph, Vertex
 import heapq
 
-
 def A_Star(graph, start, goal):
     toExplore = []
     heapq.heappush(toExplore, (start.getHeuristic(), start))
 
-    cost = {start: 0}
-    from_vertex = {start: None}
+    # Use vertex ID as key for cost
+    cost = {start.getId(): 0}
+    from_vertex = {start.getId(): None}
 
     while toExplore:
         f_n, curVertex = heapq.heappop(toExplore)
         currentVertex = graph.getVertex(curVertex.getId())
 
-        if currentVertex == goal:
+        # Check for equality using IDs
+        if currentVertex.getId() == goal.getId():
             return reconstruct_path(from_vertex, goal)
-        
-        for neighbor in currentVertex.getConnections():
-            temp_cost = cost[curVertex] + currentVertex.getWeight(neighbor)
 
-            if neighbor not in cost or temp_cost < cost[neighbor]:
-                cost[neighbor] = temp_cost
+        for neighbor in currentVertex.getConnections():
+            # Use the ID to retrieve the cost
+            temp_cost = cost[currentVertex.getId()] + currentVertex.getWeight(neighbor)
+
+            if neighbor.getId() not in cost or temp_cost < cost[neighbor.getId()]:
+                cost[neighbor.getId()] = temp_cost
                 f_n = temp_cost + neighbor.getHeuristic()  # f(n) = g(n) + h(n)
                 heapq.heappush(toExplore, (f_n, neighbor))
-                from_vertex[neighbor] = currentVertex
+                from_vertex[neighbor.getId()] = currentVertex.getId()  
+
     return None
 
+
 def reconstruct_path(from_vertex, goal):
-    current_path = []  
-    current = goal
-    while current is not None:  
-        current_path.append(current.getId())  
-        current = from_vertex[current]  
-    current_path.reverse()  
+    current_path = []
+    current = goal.getId()
+    while current is not None:
+        current_path.append(current)
+        current = from_vertex.get(current)  # Get the previous vertex ID
+    current_path.reverse()
     return current_path
+
 
 def undirected_connect(graph, one, two):
     graph.addEdge(one.getId(), two.getId())
     graph.addEdge(two.getId(), one.getId())
+
 
 def main():
     # Create graph
@@ -91,6 +97,7 @@ def main():
         print("Path found:", " -> ".join(path))
     else:
         print("No path found")
+
 
 if __name__ == '__main__':
     main()
