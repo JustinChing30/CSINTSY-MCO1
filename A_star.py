@@ -1,11 +1,10 @@
 from pythonds.graphs import Graph, Vertex
 import heapq
 
-# extends the Vertex class imported from pythonds to include a heuristic value
 class VertexHeuristic(Vertex):
-    def __init__(self, node_name, heuristic_val):  # Corrected constructor
-        super().__init__(node_name)  # Call the constructor of the parent class (Vertex)
-        self.heuristic_val = heuristic_val  # Store the heuristic value
+    def __init__(self, node_name, heuristic_val): 
+        super().__init__(node_name)  
+        self.heuristic_val = heuristic_val  
 
 def A_Star(graph, start, goal):
    toExplore = []
