@@ -1,80 +1,99 @@
 from pythonds.graphs import Graph, Vertex
 import heapq
 
-class VertexHeuristic(Vertex):
-    def __init__(self, node_name, heuristic_val): 
-        super().__init__(node_name)  
-        self.heuristic_val = heuristic_val  
-
 def A_Star(graph, start, goal):
-   toExplore = []
-   
-   heapq.heappush(toExplore, (start.heuristic_val, start))
+    toExplore = []
+    heapq.heappush(toExplore, (start.getHeuristic(), start))
 
-   cost = {start: 0}
-   from_vertex = {start: None}
+    # Use vertex ID as key for cost
+    cost = {start.getId(): 0}
+    from_vertex = {start.getId(): None}
 
-   while toExplore:
-       f_n, currentVertex = heapq.heappop(toExplore)
+    while toExplore:
+        f_n, curVertex = heapq.heappop(toExplore)
+        currentVertex = graph.getVertex(curVertex.getId())
 
-       if currentVertex == goal:
-           return reconstruct_path(from_vertex, goal)
-       
-       for neighbor in currentVertex.getConnections(): 
-         temp_val = cost[currentVertex] + currentVertex.getWeight(neighbor)
-            
-         if neighbor not in cost or temp_val < cost[neighbor]:
-             cost[neighbor] = temp_val
-             f_n = neighbor.heuristic_val + temp_val
-             heapq.heappush(toExplore, (f_n, neighbor))
-             from_vertex[neighbor] = currentVertex 
-   return None
+        # Check for equality using IDs
+        if currentVertex.getId() == goal.getId():
+            return reconstruct_path(from_vertex, goal)
+
+        for neighbor in currentVertex.getConnections():
+            # Use the ID to retrieve the cost
+            temp_cost = cost[currentVertex.getId()] + currentVertex.getWeight(neighbor)
+
+            if neighbor.getId() not in cost or temp_cost < cost[neighbor.getId()]:
+                cost[neighbor.getId()] = temp_cost
+                f_n = temp_cost + neighbor.getHeuristic()  # f(n) = g(n) + h(n)
+                heapq.heappush(toExplore, (f_n, neighbor))
+                from_vertex[neighbor.getId()] = currentVertex.getId()  
+
+    return None
 
 
 def reconstruct_path(from_vertex, goal):
-    current_path = []  
-    current = goal
-    while current is not None:  
-        current_path.append(current.getId())  
-        current = from_vertex[current]  
-    current_path.reverse()  
+    current_path = []
+    current = goal.getId()
+    while current is not None:
+        current_path.append(current)
+        current = from_vertex.get(current)  # Get the previous vertex ID
+    current_path.reverse()
     return current_path
 
-# undirected_connect Connects two nodes together (Undirected)
-# graph is the graph
-# one is first node
-# two is second node
-def undirected_connect(graph, one, two, weight):
-    graph.addEdge(one, two, weight)
-    graph.addEdge(two, one, weight)
+
+def undirected_connect(graph, one, two):
+    graph.addEdge(one.getId(), two.getId())
+    graph.addEdge(two.getId(), one.getId())
+
 
 def main():
-    
+    # Create graph
     graph = Graph()
 
-    A = VertexHeuristic("A", 10)
-    B = VertexHeuristic("B", 8)
-    C = VertexHeuristic("C", 5)
-    D = VertexHeuristic("D", 7)
-    E = VertexHeuristic("E", 3)
-    F = VertexHeuristic("F", 0) 
+    # Create vertices with heuristic values
+    # 0 heuristic value = goal
+    A = Vertex("University Mall", 25)
+    B = Vertex("McDonald's", 5)
+    C = Vertex("Perico's", 3)
+    D = Vertex("Bloemen Hall", 1)
+    E = Vertex("W.H. Taft Residence", 2)
+    F = Vertex("EGI Taft", 50)
+    G = Vertex("Castro Street", 11)
+    H = Vertex("Agno Food Court", 1)
+    I = Vertex("One Archers'", 19)
+    J = Vertex("La Casita", 0)
+    K = Vertex("Green Mall", 3)
+    L = Vertex("Green Court", 9)
+    M = Vertex("Sherwood", 15)
+    N = Vertex("Jollibee", 3)
+    O = Vertex("Dagonoy St.", 16)
+    P = Vertex("Burgundy", 4)
+    Q = Vertex("Estrada St.", 16)
+    R = Vertex("D'Student's Place", 5)
+    S = Vertex("Leon Guinto St.", 1)
+    T = Vertex("P. Ocampo St.", 20)
+    U = Vertex("Fidel A. Reyes St.", 0)  # Goal
 
-    for vertex in [A, B, C, D, E, F]:
-        graph.addVertex(vertex)
+    # Add vertices to graph
+    vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]
+    for vertex in vertices:
+        graph.addVertex(vertex.getId(), vertex.getHeuristic())
 
-    undirected_connect(graph, A, B, 1)
-    undirected_connect(graph, A, C, 3)
-    undirected_connect(graph, B, D, 1)
-    undirected_connect(graph, C, D, 1)
-    undirected_connect(graph, C, E, 5)
-    undirected_connect(graph, D, F, 2)
-    undirected_connect(graph, E, F, 2)
+    # Add connections between vertices
+    undirected_connect(graph, B, E)
+    undirected_connect(graph, E, G)
+    undirected_connect(graph, G, J)
+    undirected_connect(graph, E, A)
+    undirected_connect(graph, A, J)
+    undirected_connect(graph, B, D)
+    undirected_connect(graph, D, A)
+    undirected_connect(graph, D, F)
+    undirected_connect(graph, F, J)
 
-    start = A
-    goal = F
-    path = A_Star(graph, start, goal)
+    # Capture the path found by A* algorithm
+    path = A_Star(graph, B, J)
 
-    if path:
+    # Print the path
+    if path is not None:
         print("Path found:", " -> ".join(path))
     else:
         print("No path found")
