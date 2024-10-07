@@ -39,6 +39,21 @@ def reconstruct_path(from_vertex, goal):
     current_path.reverse()
     return current_path
 
+def visualize_search(order, graph, title, pos, *vertices):
+    plt.figure()
+    plt.title(title)
+
+    for i, node in enumerate(order):
+        plt.clf()
+        plt.title(title)
+
+        node_color = ['red' if v.getId() == node else 'green' for v in vertices]
+
+        nx.draw(graph, pos, with_labels=True, node_color=node_color, font_weight='bold', node_size=700)
+        plt.draw()
+        plt.pause(1)
+
+    plt.show()
 
 def undirected_connect(graph, one, two):
     graph.addEdge(one.getId(), two.getId())
