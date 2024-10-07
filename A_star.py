@@ -7,7 +7,8 @@ def A_Star(graph, start, goal):
     toExplore = []
     heapq.heappush(toExplore, (start.getHeuristic(), start))
 
-    # Use vertex ID as key for cost
+    Order = []
+
     cost = {start.getId(): 0}
     from_vertex = {start.getId(): None}
 
@@ -15,21 +16,21 @@ def A_Star(graph, start, goal):
         f_n, curVertex = heapq.heappop(toExplore)
         currentVertex = graph.getVertex(curVertex.getId())
 
-        # Check for equality using IDs
+        Order.append(currentVertex)
+
         if currentVertex.getId() == goal.getId():
-            return reconstruct_path(from_vertex, goal)
+            return reconstruct_path(from_vertex, goal), Order
 
         for neighbor in currentVertex.getConnections():
-            # Use the ID to retrieve the cost
             temp_cost = cost[currentVertex.getId()] + currentVertex.getWeight(neighbor)
 
             if neighbor.getId() not in cost or temp_cost < cost[neighbor.getId()]:
                 cost[neighbor.getId()] = temp_cost
-                f_n = temp_cost + neighbor.getHeuristic()  # f(n) = g(n) + h(n)
+                f_n = temp_cost + neighbor.getHeuristic()  
                 heapq.heappush(toExplore, (f_n, neighbor))
                 from_vertex[neighbor.getId()] = currentVertex.getId()  
 
-    return None
+    return None, Order
 
 
 def reconstruct_path(from_vertex, goal):
@@ -37,25 +38,42 @@ def reconstruct_path(from_vertex, goal):
     current = goal.getId()
     while current is not None:
         current_path.append(current)
-        current = from_vertex.get(current)  # Get the previous vertex ID
+        current = from_vertex.get(current)  
     current_path.reverse()
     return current_path
 
-def visualize_search(order, graph, title, pos, *vertices):
-    plt.figure()
+def visualize_search(order, graph, title, pos, path, *vertices):
+    plt.figure(figsize=(12, 8))  
     plt.title(title)
 
     for i, node in enumerate(order):
         plt.clf()
         plt.title(title)
 
-        node_color = ['red' if v.getId() == node else 'green' for v in vertices]
-
+        node_color = ['red' if v.getId() in path else 'green' for v in vertices]
         nx.draw(graph, pos, with_labels=True, node_color=node_color, font_weight='bold', node_size=700)
+
+        if i < len(order) - 1:  
+            path_edges = [(path[j], path[j + 1]) for j in range(len(path) - 1)]
+            nx.draw_networkx_edges(graph, pos, edgelist=path_edges, edge_color='orange', width=2)
+
         plt.draw()
         plt.pause(1)
 
     plt.show()
+
+def convert_to_nx_graph(pyThonds_graph):
+    nx_graph = nx.Graph() 
+
+    for vertex in pyThonds_graph:
+        nx_graph.add_node(vertex.getId(), heuristic=vertex.getHeuristic())
+
+        for neighbor in vertex.getConnections():
+            weight = vertex.getWeight(neighbor)  
+            nx_graph.add_edge(vertex.getId(), neighbor.getId(), weight=weight)
+
+    return nx_graph
+
 
 def undirected_connect(graph, one, two):
     graph.addEdge(one.getId(), two.getId())
@@ -63,11 +81,8 @@ def undirected_connect(graph, one, two):
 
 
 def main():
-    # Create graph
     graph = Graph()
 
-    # Create vertices with heuristic values
-    # 0 heuristic value = goal
     A = Vertex("University Mall", 25)
     B = Vertex("McDonald's", 5)
     C = Vertex("Perico's", 3)
@@ -88,14 +103,12 @@ def main():
     R = Vertex("D'Student's Place", 5)
     S = Vertex("Leon Guinto St.", 1)
     T = Vertex("P. Ocampo St.", 20)
-    U = Vertex("Fidel A. Reyes St.", 0)  # Goal
+    U = Vertex("Fidel A. Reyes St.", 0)  
 
-    # Add vertices to graph
     vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]
     for vertex in vertices:
         graph.addVertex(vertex.getId(), vertex.getHeuristic())
 
-    # Add connections between vertices
     undirected_connect(graph, B, E)
     undirected_connect(graph, E, G)
     undirected_connect(graph, G, J)
@@ -106,10 +119,13 @@ def main():
     undirected_connect(graph, D, F)
     undirected_connect(graph, F, J)
 
-    # Capture the path found by A* algorithm
-    path = A_Star(graph, B, J)
+    
+    path, order = A_Star(graph, B, J)
 
-    # Print the path
+    nx_graph = convert_to_nx_graph(graph)
+    pos = nx.circular_layout(nx_graph)
+    visualize_search(order, nx_graph, "A* Search Visualization", pos, path, *vertices)
+
     if path is not None:
         print("Path found:", " -> ".join(path))
     else:
