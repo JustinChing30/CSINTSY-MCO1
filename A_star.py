@@ -1,5 +1,7 @@
 from pythonds.graphs import Graph, Vertex
 import heapq
+import networkx as nx 
+import matplotlib.pyplot as plt 
 
 def A_Star(graph, start, goal):
     toExplore = []
