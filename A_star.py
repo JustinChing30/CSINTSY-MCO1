@@ -46,19 +46,23 @@ def visualize_search(order, graph, title, pos, path, *vertices):
     plt.figure(figsize=(12, 8))  
     plt.title(title)
 
+    exploredEdges = set()
+
     for i, node in enumerate(order):
         plt.clf()
         plt.title(title)
 
-        node_color = ['red' if v.getId() in path else 'green' for v in vertices]
-        nx.draw(graph, pos, with_labels=True, node_color=node_color, font_weight='bold', node_size=700)
+        nx.draw(graph, pos, with_labels=True, node_color='green', font_weight='bold', node_size=700)
 
-        if i < len(order) - 1:  
-            path_edges = [(path[j], path[j + 1]) for j in range(len(path) - 1)]
-            nx.draw_networkx_edges(graph, pos, edgelist=path_edges, edge_color='orange', width=2)
+        for neighbor in node.getConnections():
+            exploredEdges.add((node.getId(), neighbor.getId()))
+            exploredEdges.add((neighbor.getId(), node.getId()))
 
-        plt.draw()
-        plt.pause(1)
+        if i == len(order) - 1:  
+            for j in range(len(path) - 1):
+                nx.draw_networkx_edges(graph, pos, edgelist=[(path[j], path[j + 1])], edge_color='orange', width=3)
+                plt.draw()
+                plt.pause(2)
 
     plt.show()
 
@@ -123,7 +127,7 @@ def main():
     path, order = A_Star(graph, B, J)
 
     nx_graph = convert_to_nx_graph(graph)
-    pos = nx.circular_layout(nx_graph)
+    pos = nx.spring_layout(nx_graph)
     visualize_search(order, nx_graph, "A* Search Visualization", pos, path, *vertices)
 
     if path is not None:
