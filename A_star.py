@@ -32,7 +32,6 @@ def A_Star(graph, start, goal):
 
     return None, Order
 
-
 def reconstruct_path(from_vertex, goal):
     current_path = []
     current = goal.getId()
@@ -42,7 +41,7 @@ def reconstruct_path(from_vertex, goal):
     current_path.reverse()
     return current_path
 
-def visualize_search(order, graph, title, pos, path, *vertices):
+def visualize_search(order, graph, title, pos, path):
     plt.figure(figsize=(12, 8))  
     plt.title(title)
 
@@ -128,7 +127,7 @@ def main():
 
     nx_graph = convert_to_nx_graph(graph)
     pos = nx.spring_layout(nx_graph)
-    visualize_search(order, nx_graph, "A* Search Visualization", pos, path, *vertices)
+    visualize_search(order, nx_graph, "A* Search Visualization", pos, path)
 
     if path is not None:
         print("Path found:", " -> ".join(path))
