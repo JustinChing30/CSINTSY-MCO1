@@ -11,10 +11,11 @@ def gbfs(graph, start, goal):
     while toExplore: # Implicit boolean
         cur_heuristic, cur_vertex = heapq.heappop(toExplore) # Pops smallest value
 
-        print(f"Exploring: {cur_vertex.getId()} with heuristic {cur_heuristic}")
+        print(f"Exploring {cur_vertex.getId()} with a heuristic value of {cur_heuristic}")
 
         if cur_vertex.getId() == goal.getId():
-            print("Path to goal:", " -> ".join(v.getId() for v in pathTrack[cur_vertex.getId()])) # Path to goal
+            print("Path found!\n")
+            print("GBFS path to goal:", " -> ".join(v.getId() for v in pathTrack[cur_vertex.getId()])) # Path to goal
             return
 
         explored.add(cur_vertex.getId())
@@ -44,7 +45,7 @@ def undirected_connect(graph, one, two):
 # goalVertex is the goal node
 def heuristic(vertex, goalVertex):
     vertex.heuristic_val = abs(vertex.getX() - goalVertex.getX()) + abs(vertex.getY() - goalVertex.getY())
-    print(vertex.getId(), vertex.getHeuristic())
+    print(f"The heuristic value of {vertex.getId()} is {vertex.getHeuristic()}")
 
 # heuristic_goal changes the heuristic_val of the goal node to 0
 # vertex is the goal node
@@ -85,6 +86,7 @@ def main():
     # Add vertices to graph
     vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]
 
+    print("\nCalculating heuristic values...")
     # Set the goal
     goal = heuristic_goal(D) # change goal here
 
@@ -104,6 +106,7 @@ def main():
     undirected_connect(graph, Q, goal)
     undirected_connect(graph, E, goal)
 
+    print("\n\n\nCommencing GBFS...")
     gbfs(graph, A, goal)
 
 if __name__ == '__main__':
