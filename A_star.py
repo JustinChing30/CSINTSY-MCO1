@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 def A_Star(graph, start, goal):
     toExplore = []
-    heapq.heappush(toExplore, (start.getHeuristic(), start))
+    heapq.heappush(toExplore, (start.getHeuristic(), id(start), start)) 
 
     Order = []
 
@@ -13,7 +13,7 @@ def A_Star(graph, start, goal):
     from_vertex = {start.getId(): None}
 
     while toExplore:
-        f_n, curVertex = heapq.heappop(toExplore)
+        f_n, _, curVertex = heapq.heappop(toExplore) 
         currentVertex = graph.getVertex(curVertex.getId())
 
         Order.append(currentVertex)
@@ -27,7 +27,7 @@ def A_Star(graph, start, goal):
             if neighbor.getId() not in cost or temp_cost < cost[neighbor.getId()]:
                 cost[neighbor.getId()] = temp_cost
                 f_n = temp_cost + neighbor.getHeuristic()  
-                heapq.heappush(toExplore, (f_n, neighbor))
+                heapq.heappush(toExplore, (f_n, id(neighbor), neighbor))  
                 from_vertex[neighbor.getId()] = currentVertex.getId()  
 
     return None, Order
@@ -42,7 +42,7 @@ def reconstruct_path(from_vertex, goal):
     return current_path
 
 def visualize_search(order, graph, title, pos, path):
-    plt.figure(figsize=(12, 8))  
+    plt.figure(figsize=(14, 10))  
     plt.title(title)
 
     exploredEdges = set()
@@ -78,55 +78,73 @@ def convert_to_nx_graph(pyThonds_graph):
     return nx_graph
 
 
-def undirected_connect(graph, one, two):
-    graph.addEdge(one.getId(), two.getId())
-    graph.addEdge(two.getId(), one.getId())
-
+def undirected_connect(graph, one, two, weight):
+    graph.addEdge(one.getId(), two.getId(), weight)
+    graph.addEdge(two.getId(), one.getId(), weight)
 
 def main():
     graph = Graph()
 
-    A = Vertex("University Mall", 25)
-    B = Vertex("McDonald's", 5)
-    C = Vertex("Perico's", 3)
-    D = Vertex("Bloemen Hall", 1)
-    E = Vertex("W.H. Taft Residence", 2)
-    F = Vertex("EGI Taft", 50)
-    G = Vertex("Castro Street", 11)
-    H = Vertex("Agno Food Court", 1)
-    I = Vertex("One Archers'", 19)
-    J = Vertex("La Casita", 0)
-    K = Vertex("Green Mall", 3)
-    L = Vertex("Green Court", 9)
-    M = Vertex("Sherwood", 15)
-    N = Vertex("Jollibee", 3)
-    O = Vertex("Dagonoy St.", 16)
-    P = Vertex("Burgundy", 4)
-    Q = Vertex("Estrada St.", 16)
-    R = Vertex("D'Student's Place", 5)
-    S = Vertex("Leon Guinto St.", 1)
-    T = Vertex("P. Ocampo St.", 20)
-    U = Vertex("Fidel A. Reyes St.", 0)  
+    A = Vertex("A", 25) 
+    B = Vertex("B", 5)
+    C = Vertex("C", 3)
+    D = Vertex("D", 1)
+    E = Vertex("E", 2)
+    F = Vertex("F", 50)
+    G = Vertex("G", 11)
+    H = Vertex("H", 1)
+    I = Vertex("I", 19)
+    J1 = Vertex("J1", 3)
+    J2 = Vertex("J2", 2)
+    K = Vertex("K", 3)
+    L = Vertex("L", 9)
+    M = Vertex("M", 15)
+    N = Vertex("N", 3)
+    O = Vertex("O", 16)
+    P = Vertex("P", 4)
+    Q = Vertex("Q", 16)
+    R = Vertex("R", 5)
+    S = Vertex("S", 1)
+    T = Vertex("T", 20)
+    U = Vertex("U", 0)  
 
-    vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]
+    vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
     for vertex in vertices:
         graph.addVertex(vertex.getId(), vertex.getHeuristic())
 
-    undirected_connect(graph, B, E)
-    undirected_connect(graph, E, G)
-    undirected_connect(graph, G, J)
-    undirected_connect(graph, E, A)
-    undirected_connect(graph, A, J)
-    undirected_connect(graph, B, D)
-    undirected_connect(graph, D, A)
-    undirected_connect(graph, D, F)
-    undirected_connect(graph, F, J)
+    undirected_connect(graph, A, B, 2)
+    undirected_connect(graph, A, T, 3)
+    undirected_connect(graph, B, C, 4)
+    undirected_connect(graph, B, R, 3)
+    undirected_connect(graph, R, Q, 2)
+    undirected_connect(graph, Q, P, 1)
+    undirected_connect(graph, P, S, 5)
+    undirected_connect(graph, P, O, 3)
+    undirected_connect(graph, P, Q, 1)
+    undirected_connect(graph, O, N, 8)
+    undirected_connect(graph, N, M, 3)
+    undirected_connect(graph, N, G, 4)
+    undirected_connect(graph, G, E, 5)
+    undirected_connect(graph, E, F, 3)
+    undirected_connect(graph, F, D, 4)
+    undirected_connect(graph, D, A, 3)
+    undirected_connect(graph, G, I, 4)
+    undirected_connect(graph, I, J1, 3)
+    undirected_connect(graph, J1, J2, 2)
+    undirected_connect(graph, J1, K, 3)
+    undirected_connect(graph, K, U, 2)
+    undirected_connect(graph, U, J2, 3)
+    undirected_connect(graph, L, J2, 3)
+    undirected_connect(graph, L, H, 3)
+    undirected_connect(graph, H, F, 5)
+    undirected_connect(graph, T, R, 5)
+    undirected_connect(graph, T, B, 4)
+    undirected_connect(graph, T, A, 3)
 
-    
-    path, order = A_Star(graph, B, J)
+    path, order = A_Star(graph, T, K)
 
     nx_graph = convert_to_nx_graph(graph)
-    pos = nx.spring_layout(nx_graph)
+    pos = nx.spring_layout(nx_graph, k=1.5, iterations=350)
     visualize_search(order, nx_graph, "A* Search Visualization", pos, path)
 
     if path is not None:
