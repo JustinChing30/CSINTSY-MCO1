@@ -37,9 +37,15 @@ def undirected_connect(graph, one, two):
     graph.addEdge(one.getId(), two.getId())
     graph.addEdge(two.getId(), one.getId())
 
+# heuristic Calculates the heuristic value for a node
+# vertex is the first node
+# goalVertex is the goal node
 def heuristic(vertex, goalVertex):
     vertex.heuristic_val = abs(vertex.getX() - goalVertex.getX()) + abs(vertex.getY() - goalVertex.getY())
 
+# heuristic_goal changes the heuristic_val of the goal node to 0
+# vertex is the goal node
+# Return type: vertex
 def heuristic_goal(vertex):
     vertex.heuristic_val = 0
     return vertex
@@ -78,8 +84,10 @@ def main():
     for vertex in vertices:
         graph.addVertex(vertex.getId(), vertex.getHeuristic(), vertex.getX(), vertex.getY())
 
+    # Set the goal
     goal = heuristic_goal(J) # change goal here
 
+    # Calculate the heuristic_value per node in based on the goal
     for vertex in vertices:
         heuristic(vertex, goal)
 
