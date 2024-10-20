@@ -45,7 +45,7 @@ class Graph:
 
 
 class Vertex:
-    def __init__(self, num, heuristic_val):
+    def __init__(self, num, x, y):
         self.id = num
         self.connectedTo = {}
         self.color = 'white'
@@ -53,7 +53,9 @@ class Vertex:
         self.pred = None
         self.disc = 0
         self.fin = 0
-        self.heuristic_val = heuristic_val
+        self.heuristic_val = None
+        self.x = x
+        self.y = y
 
     # def __lt__(self,o):
     #     return self.id < o.id
