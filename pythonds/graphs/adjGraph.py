@@ -15,9 +15,9 @@ class Graph:
         self.vertices = {}
         self.numVertices = 0
 
-    def addVertex(self, key, heuristic_val):
+    def addVertex(self, key, heuristic_val, x, y):
         self.numVertices = self.numVertices + 1
-        newVertex = Vertex(key, heuristic_val)
+        newVertex = Vertex(key, x, y)
         self.vertices[key] = newVertex
         return newVertex
 
@@ -30,11 +30,11 @@ class Graph:
     def __contains__(self, n):
         return n in self.vertices
 
-    def addEdge(self, f, t, cost=0):
+    def addEdge(self, f, t, cost=0, heuristic_val_f=None, heuristic_val_t=None, x_f=None, y_f=None, x_t=None, y_t=None):
         if f not in self.vertices:
-            nv = self.addVertex(f, t)
+            nv = self.addVertex(f, heuristic_val_f, x_f, y_f)
         if t not in self.vertices:
-            nv = self.addVertex(t, t)
+            nv = self.addVertex(t, heuristic_val_t, x_t, y_t)
         self.vertices[f].addNeighbor(self.vertices[t], cost)
 
     def getVertices(self):
@@ -57,8 +57,8 @@ class Vertex:
         self.x = x
         self.y = y
 
-    # def __lt__(self,o):
-    #     return self.id < o.id
+    def __lt__(self,o):
+        return self.id < o.id
 
     def addNeighbor(self, nbr, weight=0):
         self.connectedTo[nbr] = weight
@@ -108,6 +108,12 @@ class Vertex:
 
     def getHeuristic(self):
         return self.heuristic_val
+
+    def getX(self):
+        return self.x
+
+    def getY(self):
+        return self.y
 
 
 class adjGraphTests(unittest.TestCase):

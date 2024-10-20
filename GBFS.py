@@ -37,12 +37,19 @@ def undirected_connect(graph, one, two):
     graph.addEdge(one.getId(), two.getId())
     graph.addEdge(two.getId(), one.getId())
 
+def heuristic(vertex, goalVertex):
+    vertex.heuristic_val = abs(vertex.getX() - goalVertex.getX()) + abs(vertex.getY() - goalVertex.getY())
+
+def heuristic_goal(vertex):
+    vertex.heuristic_val = 0
+    return vertex
+
 # Main function
 def main():
     # Create graph
     graph = Graph()
 
-    # Create vertices with heuristic values
+    # Create vertices with x and y values to be used get their heuristic values
     # 0 heuristic value = goal
     A = Vertex("University Mall", 2, 2)
     B = Vertex("McDonald's", 20, 3)
@@ -69,12 +76,17 @@ def main():
     # Add vertices to graph
     vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]
     for vertex in vertices:
-        graph.addVertex(vertex.getId(), vertex.getHeuristic())
+        graph.addVertex(vertex.getId(), vertex.getHeuristic(), vertex.getX(), vertex.getY())
+
+    goal = heuristic_goal(J) # change goal here
+
+    for vertex in vertices:
+        heuristic(vertex, goal)
 
     # Add connections between vertices
     undirected_connect(graph, B, E)
     undirected_connect(graph, E, G)
-    undirected_connect(graph, G, J)
+    undirected_connect(graph, G, goal)
     undirected_connect(graph, E, A)
     undirected_connect(graph, A, J)
     undirected_connect(graph, B, D)
@@ -82,7 +94,7 @@ def main():
     undirected_connect(graph, D, F)
     undirected_connect(graph, F, J)
 
-    gbfs(graph, B, J)
+    gbfs(graph, B, goal)
 
 if __name__ == '__main__':
     main()
