@@ -11,9 +11,11 @@ def gbfs(graph, start, goal):
     while toExplore: # Implicit boolean
         cur_heuristic, cur_vertex = heapq.heappop(toExplore) # Pops smallest value
 
+        print(f"Exploring: {cur_vertex.getId()} with heuristic {cur_heuristic}")
+
         if cur_vertex.getId() == goal.getId():
             print("Path to goal:", " -> ".join(v.getId() for v in pathTrack[cur_vertex.getId()])) # Path to goal
-            break
+            return
 
         explored.add(cur_vertex.getId())
 
@@ -42,6 +44,7 @@ def undirected_connect(graph, one, two):
 # goalVertex is the goal node
 def heuristic(vertex, goalVertex):
     vertex.heuristic_val = abs(vertex.getX() - goalVertex.getX()) + abs(vertex.getY() - goalVertex.getY())
+    print(vertex.getId(), vertex.getHeuristic())
 
 # heuristic_goal changes the heuristic_val of the goal node to 0
 # vertex is the goal node
@@ -81,28 +84,27 @@ def main():
 
     # Add vertices to graph
     vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]
-    for vertex in vertices:
-        graph.addVertex(vertex.getId(), vertex.getHeuristic(), vertex.getX(), vertex.getY())
 
     # Set the goal
-    goal = heuristic_goal(J) # change goal here
+    goal = heuristic_goal(D) # change goal here
 
     # Calculate the heuristic_value per node in based on the goal
     for vertex in vertices:
         heuristic(vertex, goal)
 
-    # Add connections between vertices
-    undirected_connect(graph, B, E)
-    undirected_connect(graph, E, G)
-    undirected_connect(graph, G, goal)
-    undirected_connect(graph, E, A)
-    undirected_connect(graph, A, J)
-    undirected_connect(graph, B, D)
-    undirected_connect(graph, D, A)
-    undirected_connect(graph, D, F)
-    undirected_connect(graph, F, J)
+    for vertex in vertices:
+        graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
 
-    gbfs(graph, B, goal)
+    # Add connections between vertices
+    undirected_connect(graph, A, Q)
+    undirected_connect(graph, A, C)
+    undirected_connect(graph, A, E)
+    undirected_connect(graph, C, E)
+    undirected_connect(graph, C, goal)
+    undirected_connect(graph, Q, goal)
+    undirected_connect(graph, E, goal)
+
+    gbfs(graph, A, goal)
 
 if __name__ == '__main__':
     main()

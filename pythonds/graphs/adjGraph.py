@@ -15,9 +15,9 @@ class Graph:
         self.vertices = {}
         self.numVertices = 0
 
-    def addVertex(self, key, heuristic_val, x, y):
+    def addVertex(self, key, x, y, heuristic_val):
         self.numVertices = self.numVertices + 1
-        newVertex = Vertex(key, x, y)
+        newVertex = Vertex(key, x, y, heuristic_val)
         self.vertices[key] = newVertex
         return newVertex
 
@@ -32,9 +32,9 @@ class Graph:
 
     def addEdge(self, f, t, cost=0, heuristic_val_f=None, heuristic_val_t=None, x_f=None, y_f=None, x_t=None, y_t=None):
         if f not in self.vertices:
-            nv = self.addVertex(f, heuristic_val_f, x_f, y_f)
+            nv = self.addVertex(f, x_f, y_f, heuristic_val_f)
         if t not in self.vertices:
-            nv = self.addVertex(t, heuristic_val_t, x_t, y_t)
+            nv = self.addVertex(t, x_t, y_t, heuristic_val_t)
         self.vertices[f].addNeighbor(self.vertices[t], cost)
 
     def getVertices(self):
@@ -45,7 +45,7 @@ class Graph:
 
 
 class Vertex:
-    def __init__(self, num, x, y):
+    def __init__(self, num, x, y, heuristic_val = None):
         self.id = num
         self.connectedTo = {}
         self.color = 'white'
@@ -53,7 +53,7 @@ class Vertex:
         self.pred = None
         self.disc = 0
         self.fin = 0
-        self.heuristic_val = None
+        self.heuristic_val = heuristic_val
         self.x = x
         self.y = y
 
