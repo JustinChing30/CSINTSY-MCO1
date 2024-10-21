@@ -26,6 +26,9 @@ def gbfs(graph, start, goal):
                 print(f"Next vertex: {next_vertex.getId()}")
                 print(f"Connections of {curr_vertex.getId()}: {[v.getId() for v in curr_vertex.getConnections()]}")
 
+                print(f"curr_vertex: {curr_vertex.getId()} at {id(curr_vertex)}")
+                print(f"next_vertex: {next_vertex.getId()} at {id(next_vertex)}")
+
                 if next_vertex not in curr_vertex.getConnections():
                     print(f"{next_vertex.getId()} is not a neighbor of {curr_vertex.getId()}")
                     continue  # Skip if not connected
@@ -117,18 +120,15 @@ def main():
     # Calculate the heuristic_value per node in based on the goal
     for vertex in vertices:
         heuristic(vertex, goal)
-
-    for vertex in vertices:
         graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
 
     # Add connections between vertices
-    undirected_connect(graph, A, B, 50)
-    undirected_connect(graph, B, C, 5)
+    undirected_connect(graph, B, C, 50)
     undirected_connect(graph, C, D, 7)
     undirected_connect(graph, D, goal, 9)
 
     print("\n\n\nCommencing GBFS...")
-    gbfs(graph, A, goal)
+    gbfs(graph, B, goal)
 
 if __name__ == '__main__':
     main()
