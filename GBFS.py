@@ -6,14 +6,15 @@ def gbfs(graph, start, goal):
     explored = set() # Set of nodes already explored
     pathTrack = {start.getId(): [start]} # Stores path to goal
 
-    heapq.heappush(toExplore, (start.getHeuristic(), start))
+    heapq.heappush(toExplore, (start.getHeuristic(), start)) # push start vertex
 
     while toExplore: # Implicit boolean
         cur_heuristic, cur_vertex = heapq.heappop(toExplore) # Pops smallest value (priority queue)
 
         print(f"Exploring {cur_vertex.getId()} with a heuristic value of {cur_heuristic}")
 
-        if cur_vertex.getId() == goal.getId():
+        if cur_vertex.getId() == goal.getId(): # if goal found
+            print("Path found!\n")
             totalCost = 0
             path = pathTrack[cur_vertex.getId()]
 
@@ -22,22 +23,17 @@ def gbfs(graph, start, goal):
                 curr_vertex = path[i] # current vertex
                 next_vertex = path[i + 1] # next vertex in path
 
-                print(f"Current vertex: {curr_vertex.getId()}")
-                print(f"Next vertex: {next_vertex.getId()}")
-                print(f"Connections of {curr_vertex.getId()}: {[v.getId() for v in curr_vertex.getConnections()]}")
+                actual_neighbor = None # will keep next vertex
+                for neighbor in curr_vertex.getConnections(): # scrolls through current vertex connections
+                    if neighbor.getId() == next_vertex.getId(): # compares current connections names to next vertex name
+                        actual_neighbor = neighbor # actual_neighbor references next_vertex basically
+                        break
 
-                print(f"curr_vertex: {curr_vertex.getId()} at {id(curr_vertex)}")
-                print(f"next_vertex: {next_vertex.getId()} at {id(next_vertex)}")
+                weight = curr_vertex.getWeight(actual_neighbor) # gets weight from next_vertex
+                print(f"Weight from {curr_vertex.getId()} to {next_vertex.getId()} is {weight}")
+                totalCost += weight # adds weight to totalCost
+                print(f"Current cost: {totalCost}")
 
-                if next_vertex not in curr_vertex.getConnections():
-                    print(f"{next_vertex.getId()} is not a neighbor of {curr_vertex.getId()}")
-                    continue  # Skip if not connected
-
-                weight = curr_vertex.getWeight(next_vertex)
-                print(f"Weight from {curr_vertex.getId()} to {next_vertex.getId()} is {curr_vertex.getWeight(next_vertex)}")
-                totalCost += weight
-
-            print("\nPath found!\n")
             print("GBFS path to goal:", " -> ".join(v.getId() for v in path)) # Path to goal
             print(f"Total cost:  {totalCost}")
             return
@@ -48,13 +44,13 @@ def gbfs(graph, start, goal):
 
         for connected in current_vertex.getConnections(): # checks connected nodes to current node
 
-            if connected.getId() in explored:
-                continue # basically this ignores that already explored node
+            if connected.getId() in explored: # if connected node is already in the explored set
+                continue # basically this ignores that already explored node then goes to the next connected node
 
-            if connected.getId() not in pathTrack:
+            if connected.getId() not in pathTrack: # if connected node is not in final track
                 pathTrack[connected.getId()] = pathTrack[cur_vertex.getId()] + [connected]
 
-            heapq.heappush(toExplore, (connected.getHeuristic(), connected))
+            heapq.heappush(toExplore, (connected.getHeuristic(), connected)) # add connected node to queue
 
 # undirected_connect Connects two nodes together (Undirected)
 # graph is the graph
@@ -123,11 +119,11 @@ def main():
         graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
 
     # Add connections between vertices
-    undirected_connect(graph, B, C, 50)
-    undirected_connect(graph, C, D, 7)
-    undirected_connect(graph, D, goal, 9)
+    undirected_connect(graph, B, C, 20)
+    undirected_connect(graph, C, D, 2)
+    undirected_connect(graph, D, goal, 1)
 
-    print("\n\n\nCommencing GBFS...")
+    print("\n\nCommencing GBFS...")
     gbfs(graph, B, goal)
 
 if __name__ == '__main__':
