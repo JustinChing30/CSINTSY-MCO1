@@ -1,7 +1,7 @@
 from pythonds.graphs import Graph, Vertex
 import heapq
-import networkx as nx 
-import matplotlib.pyplot as plt 
+import networkx as nx
+import matplotlib.pyplot as plt
 
 def A_Star(graph, start, goal):
     toExplore = []
@@ -16,20 +16,28 @@ def A_Star(graph, start, goal):
         f_n, _, curVertex = heapq.heappop(toExplore) 
         currentVertex = graph.getVertex(curVertex.getId())
 
+        print(f"Exploring {currentVertex.getId()} with f(n) = {f_n}")
+
         Order.append(currentVertex)
 
         if currentVertex.getId() == goal.getId():
+            print("Goal reached!")
             return reconstruct_path(from_vertex, goal), Order
 
         for neighbor in currentVertex.getConnections():
-            temp_cost = cost[currentVertex.getId()] + currentVertex.getWeight(neighbor)
+            
+            edge_weight = currentVertex.getWeight(neighbor)
+            temp_cost = cost[currentVertex.getId()] + edge_weight  
+
+            print(f"Checking neighbor {neighbor.getId()} with edge weight = {edge_weight} and g(n) = {temp_cost}")
 
             if neighbor.getId() not in cost or temp_cost < cost[neighbor.getId()]:
                 cost[neighbor.getId()] = temp_cost
-                f_n = temp_cost + neighbor.getHeuristic()  
+                f_n = temp_cost + neighbor.getHeuristic()  # f(n) = g(n) + h(n)
                 heapq.heappush(toExplore, (f_n, id(neighbor), neighbor))  
-                from_vertex[neighbor.getId()] = currentVertex.getId()  
+                from_vertex[neighbor.getId()] = currentVertex.getId()
 
+    print("No path found")
     return None, Order
 
 def reconstruct_path(from_vertex, goal):
@@ -37,9 +45,34 @@ def reconstruct_path(from_vertex, goal):
     current = goal.getId()
     while current is not None:
         current_path.append(current)
-        current = from_vertex.get(current)  
+        current = from_vertex.get(current)
     current_path.reverse()
     return current_path
+
+def heuristic(vertex, goalVertex):
+    vertex.heuristic_val = abs(vertex.getX() - goalVertex.getX()) + abs(vertex.getY() - goalVertex.getY())
+    print(f"The heuristic value of {vertex.getId()} is {vertex.getHeuristic()}")
+
+def heuristic_goal(vertex):
+    vertex.heuristic_val = 0
+    return vertex
+
+def undirected_connect(graph, one, two, weight):
+    graph.addEdge(one.getId(), two.getId(), weight)  
+    graph.addEdge(two.getId(), one.getId(), weight)  
+    print(f"Connected {one.getId()} and {two.getId()} with weight {weight}")
+
+def convert_to_nx_graph(pyThonds_graph):
+    nx_graph = nx.Graph()
+    
+    for vertex in pyThonds_graph:
+        nx_graph.add_node(vertex.getId(), heuristic=vertex.getHeuristic())
+
+        for neighbor in vertex.getConnections():
+            weight = vertex.getWeight(neighbor)
+            nx_graph.add_edge(vertex.getId(), neighbor.getId(), weight=weight)
+
+    return nx_graph
 
 def visualize_search(order, graph, title, pos, path):
     plt.figure(figsize=(14, 10))  
@@ -57,7 +90,7 @@ def visualize_search(order, graph, title, pos, path):
             exploredEdges.add((node.getId(), neighbor.getId()))
             exploredEdges.add((neighbor.getId(), node.getId()))
 
-        if i == len(order) - 1:  
+        if i == len(order) - 1: 
             for j in range(len(path) - 1):
                 nx.draw_networkx_edges(graph, pos, edgelist=[(path[j], path[j + 1])], edge_color='orange', width=3)
                 plt.draw()
@@ -65,93 +98,80 @@ def visualize_search(order, graph, title, pos, path):
 
     plt.show()
 
-def convert_to_nx_graph(pyThonds_graph):
-    nx_graph = nx.Graph() 
-
-    for vertex in pyThonds_graph:
-        nx_graph.add_node(vertex.getId(), heuristic=vertex.getHeuristic())
-
-        for neighbor in vertex.getConnections():
-            weight = vertex.getWeight(neighbor)  
-            nx_graph.add_edge(vertex.getId(), neighbor.getId(), weight=weight)
-
-    return nx_graph
-
-
-def undirected_connect(graph, one, two, weight):
-    graph.addEdge(one.getId(), two.getId(), weight)
-    graph.addEdge(two.getId(), one.getId(), weight)
-
 def main():
     graph = Graph()
 
-    A = Vertex("A", 25) 
-    B = Vertex("B", 5)
-    C = Vertex("C", 3)
-    D = Vertex("D", 1)
-    E = Vertex("E", 2)
-    F = Vertex("F", 50)
-    G = Vertex("G", 11)
-    H = Vertex("H", 1)
-    I = Vertex("I", 19)
-    J1 = Vertex("J1", 3)
-    J2 = Vertex("J2", 2)
-    K = Vertex("K", 3)
-    L = Vertex("L", 9)
-    M = Vertex("M", 15)
-    N = Vertex("N", 3)
-    O = Vertex("O", 16)
-    P = Vertex("P", 4)
-    Q = Vertex("Q", 16)
-    R = Vertex("R", 5)
-    S = Vertex("S", 1)
-    T = Vertex("T", 20)
-    U = Vertex("U", 0)  
+    A = Vertex("A", 2, 2)
+    B = Vertex("B", 20, 3)
+    C = Vertex("C", 19, 2)
+    D = Vertex("D", 12, 1)
+    E = Vertex("E", 11, 4)
+    F = Vertex("F", 10, 4)
+    G = Vertex("G", 8, 4)
+    H = Vertex("H", 8, 0)
+    I = Vertex("I", 7, 4)
+    J = Vertex("J1", 5, 0)
+    K = Vertex("K", 4, 3)
+    L = Vertex("L", 6, 1)
+    M = Vertex("M", 4, 6)
+    N = Vertex("N", 6, 6)
+    O = Vertex("O", 1, 6)
+    P = Vertex("P", 14, 6)
+    Q = Vertex("Q", 15, 6)
+    R = Vertex("R", 18, 6)
+    S = Vertex("S", 14, 7)
+    T = Vertex("T", 22, 6)
+    U = Vertex("U", 2, 2)
+    J2 = Vertex("J2", 5, 1)
 
-    vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
+    vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, J2]
+
+    start_name = input("Enter start: ")
+    goal_name = input("Enter goal: ")
+
+    start = None
+    goal = None
+
     for vertex in vertices:
-        graph.addVertex(vertex.getId(), vertex.getHeuristic())
+        if vertex.getId() == start_name:
+            start = vertex
+        if vertex.getId() == goal_name:
+            goal = vertex
 
-    undirected_connect(graph, A, B, 2)
-    undirected_connect(graph, A, T, 3)
-    undirected_connect(graph, B, C, 4)
-    undirected_connect(graph, B, R, 3)
-    undirected_connect(graph, R, Q, 2)
-    undirected_connect(graph, Q, P, 1)
-    undirected_connect(graph, P, S, 5)
-    undirected_connect(graph, P, O, 3)
-    undirected_connect(graph, P, Q, 1)
-    undirected_connect(graph, O, N, 8)
-    undirected_connect(graph, N, M, 3)
-    undirected_connect(graph, N, G, 4)
-    undirected_connect(graph, G, E, 5)
-    undirected_connect(graph, E, F, 3)
-    undirected_connect(graph, F, D, 4)
-    undirected_connect(graph, D, A, 3)
-    undirected_connect(graph, G, I, 4)
-    undirected_connect(graph, I, J1, 3)
-    undirected_connect(graph, J1, J2, 2)
-    undirected_connect(graph, J1, K, 3)
-    undirected_connect(graph, K, U, 2)
-    undirected_connect(graph, U, J2, 3)
-    undirected_connect(graph, L, J2, 3)
-    undirected_connect(graph, L, H, 3)
-    undirected_connect(graph, H, F, 5)
-    undirected_connect(graph, T, R, 5)
-    undirected_connect(graph, T, B, 4)
-    undirected_connect(graph, T, A, 3)
+    if start is None or goal is None:
+        print(f"Error: Start vertex '{start_name}' or goal vertex '{goal_name}' does not exist.")
+        return
 
-    path, order = A_Star(graph, T, K)
+    heuristic_goal(goal)  
 
-    nx_graph = convert_to_nx_graph(graph)
-    pos = nx.spring_layout(nx_graph, k=1.5, iterations=350)
-    visualize_search(order, nx_graph, "A* Search Visualization", pos, path)
+    for vertex in vertices:
+        heuristic(vertex, goal)
 
-    if path is not None:
-        print("Path found:", " -> ".join(path))
-    else:
+    for vertex in vertices:
+        graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
+
+    connections = [
+        (A, B, 3), (A, C, 2), (B, C, 4), (B, T, 3), (C, R, 4),
+        (T, R, 5), (R, Q, 2), (Q, P, 1), (P, S, 5), (P, O, 3),
+        (S, Q, 4), (O, N, 3), (N, G, 2), (G, F, 5), (F, E, 3),
+        (E, H, 5), (H, L, 3), (L, J, 2), (J, K, 3), (K, U, 2),
+        (J, J2, 3), (J2, L, 2), (U, K, 4), (O, G, 3), (N, M, 3),
+        (M, K, 3), (O, G, 3), (G, I, 2), (I, F, 4), (D, G, 4),
+    ]
+
+    for conn in connections:
+        undirected_connect(graph, conn[0], conn[1], conn[2])
+
+    path, order = A_Star(graph, start, goal)
+
+    if path is None:
         print("No path found")
+    else:
+        print("Path found:", " -> ".join(path))
 
+        nx_graph = convert_to_nx_graph(graph)
+        pos = nx.spring_layout(nx_graph, k=1.5, iterations=350)
+        visualize_search(order, nx_graph, "A* Search Visualization", pos, path)
 
 if __name__ == '__main__':
     main()
