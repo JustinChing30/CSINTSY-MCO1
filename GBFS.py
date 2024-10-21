@@ -9,18 +9,39 @@ def gbfs(graph, start, goal):
     heapq.heappush(toExplore, (start.getHeuristic(), start))
 
     while toExplore: # Implicit boolean
-        cur_heuristic, cur_vertex = heapq.heappop(toExplore) # Pops smallest value
+        cur_heuristic, cur_vertex = heapq.heappop(toExplore) # Pops smallest value (priority queue)
 
         print(f"Exploring {cur_vertex.getId()} with a heuristic value of {cur_heuristic}")
 
         if cur_vertex.getId() == goal.getId():
-            print("Path found!\n")
-            print("GBFS path to goal:", " -> ".join(v.getId() for v in pathTrack[cur_vertex.getId()])) # Path to goal
+            totalCost = 0
+            path = pathTrack[cur_vertex.getId()]
+
+            print("\nCalculating total cost...")
+            for i in range(len(path) - 1): # Get total path cost
+                curr_vertex = path[i] # current vertex
+                next_vertex = path[i + 1] # next vertex in path
+
+                print(f"Current vertex: {curr_vertex.getId()}")
+                print(f"Next vertex: {next_vertex.getId()}")
+                print(f"Connections of {curr_vertex.getId()}: {[v.getId() for v in curr_vertex.getConnections()]}")
+
+                if next_vertex not in curr_vertex.getConnections():
+                    print(f"{next_vertex.getId()} is not a neighbor of {curr_vertex.getId()}")
+                    continue  # Skip if not connected
+
+                weight = curr_vertex.getWeight(next_vertex)
+                print(f"Weight from {curr_vertex.getId()} to {next_vertex.getId()} is {curr_vertex.getWeight(next_vertex)}")
+                totalCost += weight
+
+            print("\nPath found!\n")
+            print("GBFS path to goal:", " -> ".join(v.getId() for v in path)) # Path to goal
+            print(f"Total cost:  {totalCost}")
             return
 
-        explored.add(cur_vertex.getId())
+        explored.add(cur_vertex.getId()) # Add current vertex to Explored
 
-        current_vertex = graph.getVertex(cur_vertex.getId())
+        current_vertex = graph.getVertex(cur_vertex.getId()) # Explore current vertex
 
         for connected in current_vertex.getConnections(): # checks connected nodes to current node
 
@@ -36,9 +57,12 @@ def gbfs(graph, start, goal):
 # graph is the graph
 # one is first node
 # two is second node
-def undirected_connect(graph, one, two):
-    graph.addEdge(one.getId(), two.getId())
-    graph.addEdge(two.getId(), one.getId())
+def undirected_connect(graph, one, two, weight):
+    graph.addEdge(one.getId(), two.getId(), weight)
+    graph.addEdge(two.getId(), one.getId(), weight)
+
+    one.addNeighbor(two, weight)
+    two.addNeighbor(one, weight)
 
 # heuristic Calculates the heuristic value for a node
 # vertex is the first node
@@ -88,7 +112,7 @@ def main():
 
     print("\nCalculating heuristic values...")
     # Set the goal
-    goal = heuristic_goal(D) # change goal here
+    goal = heuristic_goal(E) # change goal here
 
     # Calculate the heuristic_value per node in based on the goal
     for vertex in vertices:
@@ -98,13 +122,10 @@ def main():
         graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
 
     # Add connections between vertices
-    undirected_connect(graph, A, Q)
-    undirected_connect(graph, A, C)
-    undirected_connect(graph, A, E)
-    undirected_connect(graph, C, E)
-    undirected_connect(graph, C, goal)
-    undirected_connect(graph, Q, goal)
-    undirected_connect(graph, E, goal)
+    undirected_connect(graph, A, B, 50)
+    undirected_connect(graph, B, C, 5)
+    undirected_connect(graph, C, D, 7)
+    undirected_connect(graph, D, goal, 9)
 
     print("\n\n\nCommencing GBFS...")
     gbfs(graph, A, goal)
