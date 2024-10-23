@@ -22,7 +22,7 @@ def A_Star(graph, start, goal):
 
         if currentVertex.getId() == goal.getId():
             print("Goal reached!")
-            return reconstruct_path(from_vertex, goal), Order
+            return reconstruct_path(from_vertex, goal), cost[goal.getId()], Order
 
         for neighbor in currentVertex.getConnections():
             
@@ -38,7 +38,7 @@ def A_Star(graph, start, goal):
                 from_vertex[neighbor.getId()] = currentVertex.getId()
 
     print("No path found")
-    return None, Order
+    return None, None, Order
 
 def reconstruct_path(from_vertex, goal):
     current_path = []
@@ -217,12 +217,13 @@ def main():
     undirected_connect(graph, A, T, 135)
 
     print("\n\nCommencing A_Star...")
-    path, order = A_Star(graph, start, goal)
+    path, total_cost, order = A_Star(graph, start, goal)
 
     if path is None:
         print("No path found")
     else:
         print("Path found:", " -> ".join(path))
+        print(f"Total Cost: {total_cost}")
 
         nx_graph = convert_to_nx_graph(graph)
         pos = nx.spring_layout(nx_graph, k=75, iterations=3000)
