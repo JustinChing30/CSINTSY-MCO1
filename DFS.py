@@ -1,23 +1,90 @@
 from pythonds.graphs import Graph, Vertex
+import networkx as nx
+import matplotlib.pyplot as plt
 
 def undirected_connect(graph, one, two, weight=0):
     graph.addEdge(one.getId(), two.getId(), weight)
     graph.addEdge(two.getId(), one.getId(), weight)
+    
+def convert_to_nx_graph(pyThonds_graph):
+    nx_graph = nx.Graph()
+    
+    for vertex in pyThonds_graph:
+        nx_graph.add_node(vertex.getId(), heuristic=vertex.getHeuristic())
 
-def heuristic(vertex, goalVertex):
-    vertex.heuristic_val = abs(vertex.getX() - goalVertex.getX()) + abs(vertex.getY() - goalVertex.getY())
-    print(f"The heuristic value of {vertex.getId()} is {vertex.getHeuristic()}")
+        for neighbor in vertex.getConnections():
+            weight = vertex.getWeight(neighbor)
+            nx_graph.add_edge(vertex.getId(), neighbor.getId(), weight=weight)
 
-def heuristic_goal(vertex):
-    vertex.heuristic_val = 0
-    return vertex
+    return nx_graph
+    
+def visualize_dfs(graph, G, dfs_path, pos):
+    plt.title = "DFS VISUALIZATION"
+    
+    # Add nodes and edges to the graph
+    for vertex in graph.getVertices():
+        G.add_node(vertex)
 
-def DFS(vertex, graph, visited=None, path=None, distance=0, goal=None):
+    for vertex in graph.getVertices():
+        for neighbor in graph.getVertex(vertex).connectedTo:
+            G.add_edge(vertex, neighbor.getId())
+
+    # Initial plot setup
+        pos = {
+        "A": (11, 1),   
+        "B": (10, 2),
+        "C": (9, 2),
+        "D": (8, 1),
+        "E": (6, 2),
+        "F": (5, 2),
+        "G": (4, 2),
+        "H": (4, 1),
+        "I": (3, 2),
+        "J1": (2, 2),
+        "J2": (2, 1),
+        "K": (1, 2),
+        "L": (2.5, 1.5),
+        "M": (1, 4),
+        "N": (2, 4),
+        "O": (3, 5),
+        "P": (6, 5),
+        "Q": (7, 5),
+        "R": (8, 5),
+        "S": (6, 6),
+        "T": (11, 5),
+        "U": (1, 1),
+    }
+    plt.figure(figsize=(16, 8))
+    
+    # Draw the graph with nodes and edges
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='grey', node_size=500, font_size=10)
+    
+    # Iterate through the DFS path to show traversal
+    for i in range(len(dfs_path) - 1):
+        # Highlight current node and edge
+        nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='grey', node_size=500, font_size=10)
+        
+        # Highlight current DFS path
+        path_edge = [(dfs_path[i], dfs_path[i+1])]
+        nx.draw_networkx_edges(G, pos, edgelist=path_edge, edge_color='red', width=2)
+        nx.draw_networkx_nodes(G, pos, nodelist=[dfs_path[i]], node_color='red', node_size=600)
+        
+        plt.pause(1)  # Pause to visualize the step (you can adjust the delay)
+    
+    # Final step - highlight the goal
+    nx.draw_networkx_nodes(G, pos, nodelist=[dfs_path[-1]], node_color='green', node_size=600)
+    
+    plt.show()
+
+def DFS(vertex, graph, visited=None, path=None, distance=0, goal=None, dfs_path = None):
     if visited is None:
         visited = set()
         
     if path is None:
         path = []
+        
+    if dfs_path is None:
+        dfs_path = []
 
     vertex_id = vertex.getId()  # Get the vertex ID for comparisons
 
@@ -27,6 +94,7 @@ def DFS(vertex, graph, visited=None, path=None, distance=0, goal=None):
 
     visited.add(vertex_id)  # Add the current vertex ID to the visited set
     path.append(vertex_id)  # Append the current vertex's ID to the path
+    dfs_path.append(vertex_id)
 
     # Print current vertex and its heuristic
     # print(f"Exploring {vertex_id} with heuristic: {vertex.getHeuristic()}")
@@ -47,9 +115,10 @@ def DFS(vertex, graph, visited=None, path=None, distance=0, goal=None):
         next_vertex_id = next_vertex.getId()  # Get the next vertex ID
         if next_vertex_id not in visited:  # Only explore unvisited neighbors
             # Recur with updated distance
-            if DFS(next_vertex, graph, visited, path, distance + weight, goal):
+            if DFS(next_vertex, graph, visited, path, distance + weight, goal, dfs_path):
                 return True  # Stop further recursion once the goal is reached
     
+    dfs_path.pop()
     path.pop()  # Remove the vertex if it doesn't lead to the goal
     return False  # Return False if goal is not found
 
@@ -142,9 +211,15 @@ def main():
     undirected_connect(graph, B, A, 15)
     undirected_connect(graph, A, T, 135)
 
-
-    if not DFS(start, graph, goal=goal):
+    dfs_path = []
+    
+    
+    if not DFS(start, graph, goal=goal, dfs_path=dfs_path):
         print(f"Goal {goal.getId()} not reachable from the start location.")
+    else:
+        nx_graph = convert_to_nx_graph(graph)
+        pos = nx.spring_layout(nx_graph, k=75, iterations=3000)
+        visualize_dfs(graph, nx_graph, dfs_path, pos)
 
 if __name__ == '__main__':
     main()
