@@ -29,7 +29,8 @@ def DFS(vertex, graph, visited=None, path=None, distance=0, goal=None):
     path.append(vertex_id)  # Append the current vertex's ID to the path
 
     # Print current vertex and its heuristic
-    print(f"Exploring {vertex_id} with heuristic: {vertex.getHeuristic()}")
+    # print(f"Exploring {vertex_id} with heuristic: {vertex.getHeuristic()}")
+    print(f"Exploring {vertex_id}")
 
     # Check if the goal is reached
     if vertex_id == goal.getId():  # Fixed goal comparison
@@ -56,64 +57,94 @@ def main():
     graph = Graph()
 
     # Define the vertices with their heuristic values and positions
-    A = Vertex("Arad", 2, 2)          # Heuristic: 366
-    B = Vertex("Zerind", 4, 3)        # Heuristic: 374
-    C = Vertex("Oradea", 5, 0)        # Heuristic: 380
-    D = Vertex("Sibiu", 6, 1)         # Heuristic: 253
-    E = Vertex("Timisoara", 8, 0)     # Heuristic: 329
-    F = Vertex("Lugoj", 7, 4)         # Heuristic: 244
-    G = Vertex("Mehadia", 10, 4)      # Heuristic: 241
-    H = Vertex("Dobreta", 12, 1)      # Heuristic: 242
-    I = Vertex("Craiova", 8, 4)       # Heuristic: 160
-    J = Vertex("Rimnicu Vilcea", 14, 6) # Heuristic: 193
-    K = Vertex("Pitesti", 18, 6)      # Heuristic: 100
-    L = Vertex("Fagaras", 20, 3)      # Heuristic: 176
-    M = Vertex("Bucharest", 22, 6)    # Heuristic: 0
-    N = Vertex("Giurgiu", 14, 7)      # Heuristic: 77
-    O = Vertex("Urziceni", 6, 6)       # Heuristic: 80
-    P = Vertex("Vaslui", 1, 6)        # Heuristic: 199
-    Q = Vertex("Iasi", 4, 6)          # Heuristic: 226
-    R = Vertex("Neamt", 15, 6)        # Heuristic: 234
-    S = Vertex("Hirsova", 19, 2)      # Heuristic: 151
-    T = Vertex("Eforie", 11, 4)       # Heuristic: 161
+    A = Vertex("University Mall", 2, 2)
+    B = Vertex("McDonald's", 20, 3)
+    C = Vertex("Perico's", 19, 2)
+    D = Vertex("Bloemen Hall", 12, 1)
+    E = Vertex("W.H. Taft Residence", 11, 4)
+    F = Vertex("EGI Taft", 10, 4)
+    G = Vertex("Castro Street", 8, 4)
+    H = Vertex("Agno Food Court", 8, 0)
+    I = Vertex("One Archers'", 7, 4)
+    J1 = Vertex("La Casita", 5, 3)
+    J2 = Vertex("La Casita", 5, 0)
+    K = Vertex("Green Mall", 4, 3)
+    L = Vertex("Green Court", 6, 1)
+    M = Vertex("Sherwood", 4, 6)
+    N = Vertex("Jollibee", 6, 6)
+    O = Vertex("Dagonoy St.", 1, 6)
+    P = Vertex("Burgundy", 14, 6)
+    Q = Vertex("Estrada St.", 15, 6)
+    R = Vertex("D'Student's Place", 18, 6)
+    S = Vertex("Leon Guinto St.", 14, 7)
+    T = Vertex("P. Ocampo St.", 22, 6)
+    U = Vertex("Fidel A. Reyes St.", 2, 2)
 
-    vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T]
+    vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
+    
+    # start_name = input("Enter start: ")
+    # goal_name = input("Enter goal: ")
 
-    print("\nCalculating heuristic values...")
-    goal = heuristic_goal(M)
+    # start = None
+    # goal = None
 
-    for vertex in vertices:
-        heuristic(vertex, goal)
+    # for vertex in vertices:
+    #     if vertex.getId() == start_name:
+    #         start = vertex
+    #     if vertex.getId() == goal_name:
+    #         goal = vertex
+
+
+    # if start is None or goal is None:
+    #     print(f"Error: Start vertex '{start_name}' or goal vertex '{goal_name}' does not exist.")
+    #     return
 
     for vertex in vertices:
         graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
 
     # Connect vertices using the undirected_connect function
-    undirected_connect(graph, A, B, 75)  # Arad - Zerind
-    undirected_connect(graph, A, D, 140) # Arad - Sibiu
-    undirected_connect(graph, A, E, 118) # Arad - Timisoara
-    undirected_connect(graph, B, C, 71)  # Zerind - Oradea
-    undirected_connect(graph, C, D, 151) # Oradea - Sibiu
-    undirected_connect(graph, E, F, 111) # Timisoara - Lugoj
-    undirected_connect(graph, F, G, 70)  # Lugoj - Mehadia
-    undirected_connect(graph, G, H, 75)  # Mehadia - Dobreta
-    undirected_connect(graph, H, I, 120) # Dobreta - Craiova
-    undirected_connect(graph, I, J, 146) # Craiova - Rimnicu Vilcea
-    undirected_connect(graph, I, K, 138) # Craiova - Pitesti
-    undirected_connect(graph, J, D, 80)  # Rimnicu Vilcea - Sibiu
-    undirected_connect(graph, J, K, 97)  # Rimnicu Vilcea - Pitesti
-    undirected_connect(graph, K, M, 101) # Pitesti - Bucharest
-    undirected_connect(graph, L, D, 99)  # Fagaras - Sibiu
-    undirected_connect(graph, L, M, 211) # Fagaras - Bucharest
-    undirected_connect(graph, M, N, 90)  # Bucharest - Giurgiu
-    undirected_connect(graph, M, O, 85)  # Bucharest - Urziceni
-    undirected_connect(graph, O, S, 98)  # Urziceni - Hirsova
-    undirected_connect(graph, S, T, 86)  # Hirsova - Eforie
-    undirected_connect(graph, O, P, 142) # Urziceni - Vaslui
-    undirected_connect(graph, P, Q, 92)  # Vaslui - Iasi
-    undirected_connect(graph, Q, R, 87)  # Iasi - Neamt
+    undirected_connect(graph, A, B, 15)
+    undirected_connect(graph, A, T, 135)
+    undirected_connect(graph, B, T, 120)
+    undirected_connect(graph, B, R, 140)
+    undirected_connect(graph, B, C, 40)
+    undirected_connect(graph, C, R, 180)
+    undirected_connect(graph, C, D, 90)
+    undirected_connect(graph, R, T, 20)
+    undirected_connect(graph, R, Q, 25)
+    undirected_connect(graph, Q, S, 50)
+    undirected_connect(graph, Q, P, 10)
+    undirected_connect(graph, S, O, 40)  
+    undirected_connect(graph, S, P, 60)
+    undirected_connect(graph, O, P, 30)
+    undirected_connect(graph, P, D, 165) 
+    undirected_connect(graph, P, E, 145) 
+    undirected_connect(graph, D, E, 30)
+    undirected_connect(graph, O, E, 130)  
+    undirected_connect(graph, O, F, 145)  
+    undirected_connect(graph, F, E, 10) 
+    undirected_connect(graph, O, N, 120) 
+    undirected_connect(graph, F, H, 55) 
+    undirected_connect(graph, F, G, 20) 
+    undirected_connect(graph, H, G, 30)
+    undirected_connect(graph, I, G, 15) 
+    undirected_connect(graph, H, I, 25) 
+    undirected_connect(graph, H, L, 20) 
+    undirected_connect(graph, I, L, 20) 
+    undirected_connect(graph, I, J1, 10) 
+    undirected_connect(graph, L, J1, 20) 
+    undirected_connect(graph, L, J2, 35) 
+    undirected_connect(graph, J1, J2, 45) 
+    undirected_connect(graph, J1, K, 10) 
+    undirected_connect(graph, J2, U, 30) 
+    undirected_connect(graph, U, K, 20) 
+    undirected_connect(graph, M, K, 400) 
+    undirected_connect(graph, M, N, 25) 
+    
+    start = A
+    goal = M
 
-    if not DFS(A, graph, goal=goal):
+    if not DFS(start, graph, goal=goal):
         print(f"Goal {goal.getId()} not reachable from the start location.")
 
 if __name__ == '__main__':
