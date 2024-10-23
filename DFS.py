@@ -83,22 +83,22 @@ def main():
     # Add vertices to graph
     vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
     
-    # start_name = input("Enter start: ")
-    # goal_name = input("Enter goal: ")
+    start_name = input("Enter start node: ")
+    goal_name = input("Enter goal node: ")
 
-    # start = None
-    # goal = None
+    start = None
+    goal = None
 
-    # for vertex in vertices:
-    #     if vertex.getId() == start_name:
-    #         start = vertex
-    #     if vertex.getId() == goal_name:
-    #         goal = vertex
+    for vertex in vertices:
+        if vertex.getId() == start_name:
+            start = vertex
+        if vertex.getId() == goal_name:
+            goal = vertex
 
 
-    # if start is None or goal is None:
-    #     print(f"Error: Start vertex '{start_name}' or goal vertex '{goal_name}' does not exist.")
-    #     return
+    if start is None or goal is None:
+        print(f"Error: Start vertex '{start_name}' or goal vertex '{goal_name}' does not exist.")
+        return
 
     for vertex in vertices:
         graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
@@ -141,9 +141,7 @@ def main():
     undirected_connect(graph, B, T, 120)
     undirected_connect(graph, B, A, 15)
     undirected_connect(graph, A, T, 135)
-    
-    start = D
-    goal = S
+
 
     if not DFS(start, graph, goal=goal):
         print(f"Goal {goal.getId()} not reachable from the start location.")

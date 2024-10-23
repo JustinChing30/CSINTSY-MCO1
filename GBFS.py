@@ -109,8 +109,8 @@ def main():
     # Add vertices to graph
     vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
 
-    start_name = input("Enter start: ") # Gets input for start node
-    goal_name = input("Enter goal: ") # Gets input for goal node
+    start_name = input("Enter start node: ") # Gets input for start node
+    goal_name = input("Enter goal node: ") # Gets input for goal node
 
     start = None
     goal = None

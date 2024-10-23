@@ -127,8 +127,8 @@ def main():
 
     vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
 
-    start_name = input("Enter start: ")
-    goal_name = input("Enter goal: ")
+    start_name = input("Enter start node: ")
+    goal_name = input("Enter goal node: ")
 
     start = None
     goal = None
