@@ -84,7 +84,7 @@ def main():
 
     # Create vertices with x and y values to be used get their heuristic values
     # 0 heuristic value = goal
-    A = Vertex("A", 21, 23)
+    A = Vertex("A", 21, 3)
     B = Vertex("B", 20, 3)
     C = Vertex("C", 19, 2)
     D = Vertex("D", 12, 1)
@@ -128,7 +128,7 @@ def main():
 
     print("\nCalculating heuristic values...")
     # Set the goal
-    goal = heuristic_goal(goal) # change goal here
+    heuristic_goal(goal) # change goal here
 
     # Calculate the heuristic_value per node in based on the goal
     for vertex in vertices:
@@ -175,7 +175,7 @@ def main():
     undirected_connect(graph, A, T, 135)
 
     print("\n\nCommencing GBFS...")
-    gbfs(graph, startNode, goal)
+    gbfs(graph, start, goal)
 
 if __name__ == '__main__':
     main()
