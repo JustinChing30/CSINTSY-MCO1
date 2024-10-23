@@ -84,35 +84,51 @@ def main():
 
     # Create vertices with x and y values to be used get their heuristic values
     # 0 heuristic value = goal
-    A = Vertex("University Mall", 2, 2)
-    B = Vertex("McDonald's", 20, 3)
-    C = Vertex("Perico's", 19, 2)
-    D = Vertex("Bloemen Hall", 12, 1)
-    E = Vertex("W.H. Taft Residence", 11, 4)
-    F = Vertex("EGI Taft", 10, 4)
-    G = Vertex("Castro Street", 8, 4)
-    H = Vertex("Agno Food Court", 8, 0)
-    I = Vertex("One Archers'", 7, 4)
-    J1 = Vertex("La Casita", 5, 3)
-    J2 = Vertex("La Casita", 5, 0)
-    K = Vertex("Green Mall", 4, 3)
-    L = Vertex("Green Court", 6, 1)
-    M = Vertex("Sherwood", 4, 6)
-    N = Vertex("Jollibee", 6, 6)
-    O = Vertex("Dagonoy St.", 1, 6)
-    P = Vertex("Burgundy", 14, 6)
-    Q = Vertex("Estrada St.", 15, 6)
-    R = Vertex("D'Student's Place", 18, 6)
-    S = Vertex("Leon Guinto St.", 14, 7)
-    T = Vertex("P. Ocampo St.", 22, 6)
-    U = Vertex("Fidel A. Reyes St.", 2, 2)
+    A = Vertex("A", 21, 23)
+    B = Vertex("B", 20, 3)
+    C = Vertex("C", 19, 2)
+    D = Vertex("D", 12, 1)
+    E = Vertex("E", 11, 4)
+    F = Vertex("F", 10, 4)
+    G = Vertex("G", 8, 4)
+    H = Vertex("H", 8, 0)
+    I = Vertex("I'", 7, 4)
+    J1 = Vertex("J1", 5, 3)
+    J2 = Vertex("J2", 5, 0)
+    K = Vertex("K", 4, 3)
+    L = Vertex("L", 6, 1)
+    M = Vertex("M", 4, 6)
+    N = Vertex("N", 6, 6)
+    O = Vertex("O", 1, 6)
+    P = Vertex("P", 14, 6)
+    Q = Vertex("Q", 15, 6)
+    R = Vertex("R", 18, 6)
+    S = Vertex("S", 14, 7)
+    T = Vertex("T", 22, 6)
+    U = Vertex("U", 2, 2)
 
     # Add vertices to graph
     vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
 
+    start_name = input("Enter start: ")
+    goal_name = input("Enter goal: ")
+
+    start = None
+    goal = None
+
+    for vertex in vertices:
+        if vertex.getId() == start_name:
+            start = vertex
+        if vertex.getId() == goal_name:
+            goal = vertex
+
+    if start is None or goal is None:
+        print(f"Error: Start vertex '{start_name}' or goal vertex '{goal_name}' does not exist.")
+        return
+
     print("\nCalculating heuristic values...")
     # Set the goal
-    goal = heuristic_goal(E) # change goal here
+    goal = heuristic_goal(goal) # change goal here
 
     # Calculate the heuristic_value per node in based on the goal
     for vertex in vertices:
@@ -159,7 +175,7 @@ def main():
     undirected_connect(graph, A, T, 135)
 
     print("\n\nCommencing GBFS...")
-    gbfs(graph, B, goal)
+    gbfs(graph, startNode, goal)
 
 if __name__ == '__main__':
     main()

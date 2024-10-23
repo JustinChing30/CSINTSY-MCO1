@@ -101,7 +101,7 @@ def visualize_search(order, graph, title, pos, path):
 def main():
     graph = Graph()
 
-    A = Vertex("A", 2, 2)
+    A = Vertex("A", 21, 3)
     B = Vertex("B", 20, 3)
     C = Vertex("C", 19, 2)
     D = Vertex("D", 12, 1)
@@ -110,7 +110,7 @@ def main():
     G = Vertex("G", 8, 4)
     H = Vertex("H", 8, 0)
     I = Vertex("I", 7, 4)
-    J = Vertex("J1", 5, 0)
+    J = Vertex("J1", 5, 3)
     K = Vertex("K", 4, 3)
     L = Vertex("L", 6, 1)
     M = Vertex("M", 4, 6)
@@ -122,7 +122,7 @@ def main():
     S = Vertex("S", 14, 7)
     T = Vertex("T", 22, 6)
     U = Vertex("U", 2, 2)
-    J2 = Vertex("J2", 5, 1)
+    J2 = Vertex("J2", 5, 0)
 
     vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, J2]
 
