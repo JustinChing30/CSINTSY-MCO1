@@ -55,7 +55,6 @@ def heuristic(vertex, goalVertex):
 
 def heuristic_goal(vertex):
     vertex.heuristic_val = 0
-    return vertex
 
 def undirected_connect(graph, one, two, weight):
     graph.addEdge(one.getId(), two.getId(), weight)  
