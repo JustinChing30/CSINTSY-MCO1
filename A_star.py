@@ -55,7 +55,8 @@ def heuristic(vertex, goalVertex):
 
 def heuristic_goal(vertex):
     vertex.heuristic_val = 0
-    
+    return vertex
+
 def undirected_connect(graph, one, two, weight):
     graph.addEdge(one.getId(), two.getId(), weight)  
     graph.addEdge(two.getId(), one.getId(), weight)  
@@ -78,6 +79,31 @@ def visualize_search(order, graph, title, pos, path):
     plt.title(title)
 
     exploredEdges = set()
+
+    pos = {
+        "A": (11, 1),   
+        "B": (10, 2),
+        "C": (9, 2),
+        "D": (8, 1),
+        "E": (6, 2),
+        "F": (5, 2),
+        "G": (4, 2),
+        "H": (4, 1),
+        "I": (3, 2),
+        "J1": (2, 2),
+        "J2": (2, 1),
+        "K": (1, 2),
+        "L": (2, 1.5),
+        "M": (1, 4),
+        "N": (2, 4),
+        "O": (3, 5),
+        "P": (6, 5),
+        "Q": (7, 5),
+        "R": (8, 5),
+        "S": (6, 6),
+        "T": (11, 5),
+        "U": (1, 1),
+    }
 
     for i, node in enumerate(order):
         plt.clf()
@@ -127,8 +153,8 @@ def main():
 
     vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
 
-    start_name = input("Enter start node: ")
-    goal_name = input("Enter goal node: ")
+    start_name = input("Enter start: ")
+    goal_name = input("Enter goal: ")
 
     start = None
     goal = None
@@ -199,7 +225,7 @@ def main():
         print("Path found:", " -> ".join(path))
 
         nx_graph = convert_to_nx_graph(graph)
-        pos = nx.spring_layout(nx_graph, k=7.9, iterations=1500)
+        pos = nx.spring_layout(nx_graph, k=75, iterations=3000)
         visualize_search(order, nx_graph, "A* Search Visualization", pos, path)
 
 if __name__ == '__main__':
