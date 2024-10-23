@@ -91,7 +91,7 @@ def main():
     F = Vertex("F", 10, 4)
     G = Vertex("G", 8, 4)
     H = Vertex("H", 8, 0)
-    I = Vertex("I'", 7, 4)
+    I = Vertex("I", 7, 4)
     J1 = Vertex("J1", 5, 3)
     J2 = Vertex("J2", 5, 0)
     K = Vertex("K", 4, 3)
