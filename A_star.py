@@ -55,7 +55,7 @@ def heuristic(vertex, goalVertex):
 
 def heuristic_goal(vertex):
     vertex.heuristic_val = 0
-
+    
 def undirected_connect(graph, one, two, weight):
     graph.addEdge(one.getId(), two.getId(), weight)  
     graph.addEdge(two.getId(), one.getId(), weight)  
@@ -74,7 +74,7 @@ def convert_to_nx_graph(pyThonds_graph):
     return nx_graph
 
 def visualize_search(order, graph, title, pos, path):
-    plt.figure(figsize=(14, 10))  
+    plt.figure(figsize=(16, 10))  
     plt.title(title)
 
     exploredEdges = set()
@@ -100,6 +100,8 @@ def visualize_search(order, graph, title, pos, path):
 def main():
     graph = Graph()
 
+    # Create vertices with x and y values to be used get their heuristic values
+    # 0 heuristic value = goal
     A = Vertex("A", 21, 3)
     B = Vertex("B", 20, 3)
     C = Vertex("C", 19, 2)
@@ -109,7 +111,8 @@ def main():
     G = Vertex("G", 8, 4)
     H = Vertex("H", 8, 0)
     I = Vertex("I", 7, 4)
-    J = Vertex("J1", 5, 3)
+    J1 = Vertex("J1", 5, 3)
+    J2 = Vertex("J2", 5, 0)
     K = Vertex("K", 4, 3)
     L = Vertex("L", 6, 1)
     M = Vertex("M", 4, 6)
@@ -121,9 +124,8 @@ def main():
     S = Vertex("S", 14, 7)
     T = Vertex("T", 22, 6)
     U = Vertex("U", 2, 2)
-    J2 = Vertex("J2", 5, 0)
 
-    vertices = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, J2]
+    vertices = [A, B, C, D, E, F, G, H, I, J1, J2, K, L, M, N, O, P, Q, R, S, T, U]
 
     start_name = input("Enter start: ")
     goal_name = input("Enter goal: ")
@@ -149,18 +151,46 @@ def main():
     for vertex in vertices:
         graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
 
-    connections = [
-        (A, B, 3), (A, C, 2), (B, C, 4), (B, T, 3), (C, R, 4),
-        (T, R, 5), (R, Q, 2), (Q, P, 1), (P, S, 5), (P, O, 3),
-        (S, Q, 4), (O, N, 3), (N, G, 2), (G, F, 5), (F, E, 3),
-        (E, H, 5), (H, L, 3), (L, J, 2), (J, K, 3), (K, U, 2),
-        (J, J2, 3), (J2, L, 2), (U, K, 4), (O, G, 3), (N, M, 3),
-        (M, K, 3), (O, G, 3), (G, I, 2), (I, F, 4), (D, G, 4),
-    ]
+    # Add connections between vertices
+    undirected_connect(graph, U, K, 20)
+    undirected_connect(graph, U, J2, 30)
+    undirected_connect(graph, J2, J1, 45)
+    undirected_connect(graph, K, J1, 10)
+    undirected_connect(graph, K, M, 400)
+    undirected_connect(graph, M, N, 25)
+    undirected_connect(graph, J1, I, 10)
+    undirected_connect(graph, J2, L, 35)
+    undirected_connect(graph, J1, L, 20)
+    undirected_connect(graph, L, I, 20)
+    undirected_connect(graph, I, G, 15)
+    undirected_connect(graph, L, H, 20)
+    undirected_connect(graph, I, H, 25)
+    undirected_connect(graph, G, H, 30)
+    undirected_connect(graph, G, F, 20)
+    undirected_connect(graph, H, F, 55)
+    undirected_connect(graph, N, O, 120)
+    undirected_connect(graph, F, O, 145)
+    undirected_connect(graph, F, E, 10)
+    undirected_connect(graph, O, E, 130)
+    undirected_connect(graph, O, S, 40)
+    undirected_connect(graph, O, P, 30)
+    undirected_connect(graph, E, P, 145)
+    undirected_connect(graph, E, D, 30)
+    undirected_connect(graph, S, P, 60)
+    undirected_connect(graph, D, P, 165)
+    undirected_connect(graph, P, Q, 10)
+    undirected_connect(graph, S, Q, 50)
+    undirected_connect(graph, D, C, 90)
+    undirected_connect(graph, Q, R, 25)
+    undirected_connect(graph, R, C, 180)
+    undirected_connect(graph, R, B, 140)
+    undirected_connect(graph, C, B, 40)
+    undirected_connect(graph, R, T, 20)
+    undirected_connect(graph, B, T, 120)
+    undirected_connect(graph, B, A, 15)
+    undirected_connect(graph, A, T, 135)
 
-    for conn in connections:
-        undirected_connect(graph, conn[0], conn[1], conn[2])
-
+    print("\n\nCommencing A_Star...")
     path, order = A_Star(graph, start, goal)
 
     if path is None:
@@ -169,7 +199,7 @@ def main():
         print("Path found:", " -> ".join(path))
 
         nx_graph = convert_to_nx_graph(graph)
-        pos = nx.spring_layout(nx_graph, k=1.5, iterations=350)
+        pos = nx.spring_layout(nx_graph, k=7.9, iterations=1500)
         visualize_search(order, nx_graph, "A* Search Visualization", pos, path)
 
 if __name__ == '__main__':
