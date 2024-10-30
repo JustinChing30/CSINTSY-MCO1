@@ -1,5 +1,7 @@
 from pythonds.graphs import Graph, Vertex
 import heapq
+import networkx as nx
+import matplotlib.pyplot as plt
 
 def gbfs(graph, start, goal):
     toExplore = [] # List of nodes to explore
@@ -17,6 +19,7 @@ def gbfs(graph, start, goal):
             print("Path found!\n")
             totalCost = 0
             path = pathTrack[cur_vertex.getId()]
+            forVisualize = []
 
             print("\nCalculating total cost...")
             for i in range(len(path) - 1): # Get total path cost
@@ -36,7 +39,11 @@ def gbfs(graph, start, goal):
 
             print("GBFS path to goal:", " -> ".join(v.getId() for v in path)) # Path to goal
             print(f"Total cost:  {totalCost}")
-            return
+
+            for v in path:
+                forVisualize.append(v.getId())
+
+            return forVisualize
 
         explored.add(cur_vertex.getId()) # Add current vertex to Explored
 
@@ -75,6 +82,75 @@ def heuristic(vertex, goalVertex):
 # Return type: vertex
 def heuristic_goal(vertex):
     vertex.heuristic_val = 0
+
+# convert_to_nx_graph is used for graph visualization
+def convert_to_nx_graph(pyThonds_graph):
+    nx_graph = nx.Graph()
+
+    for vertex in pyThonds_graph:
+        nx_graph.add_node(vertex.getId(), heuristic=vertex.getHeuristic())
+
+        for neighbor in vertex.getConnections():
+            weight = vertex.getWeight(neighbor)
+            nx_graph.add_edge(vertex.getId(), neighbor.getId(), weight=weight)
+
+    return nx_graph
+
+def visualize_gbfs(nxGraph, path):
+    plt.title = "GBFS Visualization"
+
+    # Node positions
+    pos = {
+        "A": (11, 1),
+        "B": (10, 2),
+        "C": (9, 2),
+        "D": (8, 1),
+        "E": (6, 2),
+        "F": (5, 2),
+        "G": (4, 2),
+        "H": (4, 1),
+        "I": (3, 2),
+        "J1": (2, 2),
+        "J2": (2, 1),
+        "K": (1, 2),
+        "L": (2, 1.5),
+        "M": (1, 4),
+        "N": (2, 4),
+        "O": (3, 5),
+        "P": (6, 5),
+        "Q": (7, 5),
+        "R": (8, 5),
+        "S": (6, 6),
+        "T": (11, 5),
+        "U": (1, 1),
+    }
+
+    # Window size
+    plt.figure(figsize = (16, 10))
+
+    # Optimal path visualization
+    for i in range(len(path) - 1):
+
+        # Base graph is drawn
+        nx.draw(nxGraph, pos, with_labels = True, node_color = "orange", edge_color = "grey", node_size = 500, font_size = 10)
+
+        # Note to do the stuff from current node to the next node
+        path_edge = [(path[i], path[i + 1])]
+
+        # Highlights edges
+        nx.draw_networkx_edges(nxGraph, pos, edgelist = path_edge, edge_color = "green", width = 2)
+
+        # Highlights nodes
+        nx.draw_networkx_nodes(nxGraph, pos, nodelist = [path[i]], node_color = "green", node_size = 700)
+
+        # Pause for a bit
+        plt.pause(0.5)
+
+    # Highlights goal
+    nx.draw_networkx_nodes(nxGraph, pos, nodelist = [path[-1]], node_color = "yellow", node_size = 600)
+
+    # Prevents visualization from instantly closing
+    plt.show()
 
 # Main function
 def main():
@@ -174,7 +250,13 @@ def main():
     undirected_connect(graph, A, T, 135)
 
     print("\n\nCommencing GBFS...")
-    gbfs(graph, start, goal)
+    path = gbfs(graph, start, goal)
+
+    if path is None:
+        print("No path found")
+    else:
+        nx_graph = convert_to_nx_graph(graph)
+        visualize_gbfs(nx_graph, path)
 
 if __name__ == '__main__':
     main()
