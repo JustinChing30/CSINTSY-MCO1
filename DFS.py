@@ -19,8 +19,7 @@ def convert_to_nx_graph(pyThonds_graph):
     return nx_graph
     
 def visualize_dfs(graph, G, dfs_path, pos):
-    plt.title = "DFS VISUALIZATION"
-    
+
     # Add nodes and edges to the graph
     for vertex in graph.getVertices():
         G.add_node(vertex)
@@ -55,6 +54,7 @@ def visualize_dfs(graph, G, dfs_path, pos):
         "U": (1, 1),
     }
     plt.figure(figsize=(16, 8))
+    plt.title("DFS Visualization")
 
     # Draw the graph with nodes and edges
     nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='grey', node_size=500, font_size=10)
