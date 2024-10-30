@@ -132,7 +132,7 @@ def visualize_gbfs(nxGraph, path):
     for i in range(len(path) - 1):
 
         # Base graph is drawn
-        nx.draw(nxGraph, pos, with_labels = True, node_color = "orange", edge_color = "grey", node_size = 500, font_size = 10)
+        nx.draw(nxGraph, pos, with_labels = True, node_color = "orange", edge_color = "grey", node_size = 500, font_size = 10, font_weight = "bold")
 
         # Note to do the stuff from current node to the next node
         path_edge = [(path[i], path[i + 1])]
