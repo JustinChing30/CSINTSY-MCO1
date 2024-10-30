@@ -125,7 +125,7 @@ def visualize_gbfs(nxGraph, path):
     }
 
     # Window size
-    plt.figure(figsize = (16, 10))
+    plt.figure(figsize = (16, 8))
     plt.title("GBFS Visualization")
 
     # Optimal path visualization
@@ -147,7 +147,7 @@ def visualize_gbfs(nxGraph, path):
         plt.pause(0.5)
 
     # Highlights goal
-    nx.draw_networkx_nodes(nxGraph, pos, nodelist = [path[-1]], node_color = "yellow", node_size = 600)
+    nx.draw_networkx_nodes(nxGraph, pos, nodelist = [path[-1]], node_color = "yellow", node_size = 700)
 
     # Prevents visualization from instantly closing
     plt.show()
