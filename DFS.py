@@ -55,8 +55,7 @@ def visualize_dfs(graph, G, dfs_path, pos):
         "U": (1, 1),
     }
     plt.figure(figsize=(16, 8))
-    plt.title("DFS Visualization")
-    
+
     # Draw the graph with nodes and edges
     nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='grey', node_size=500, font_size=10)
     
