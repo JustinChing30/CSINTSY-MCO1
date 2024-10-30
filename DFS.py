@@ -141,7 +141,7 @@ def main():
     L = Vertex("L", 6, 1)
     M = Vertex("M", 4, 6)
     N = Vertex("N", 6, 6)
-    O = Vertex("O", 1, 6)
+    O = Vertex("O", 11, 6)
     P = Vertex("P", 14, 6)
     Q = Vertex("Q", 15, 6)
     R = Vertex("R", 18, 6)
