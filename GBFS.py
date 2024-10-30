@@ -97,7 +97,6 @@ def convert_to_nx_graph(pyThonds_graph):
     return nx_graph
 
 def visualize_gbfs(nxGraph, path):
-    plt.title = "GBFS Visualization"
 
     # Node positions
     pos = {
@@ -127,6 +126,7 @@ def visualize_gbfs(nxGraph, path):
 
     # Window size
     plt.figure(figsize = (16, 10))
+    plt.title("GBFS Visualization")
 
     # Optimal path visualization
     for i in range(len(path) - 1):
