@@ -89,23 +89,26 @@ def initialize_graph():
 def add_vertex(graph):
     new_id = input("Input vertex ID to add: ")
 
-    # loop until user inputs valid x and y values
-    while True:
-        try:
-            x = int(input("Enter x-coordinate: "))
-            y = int(input("Enter y-coordinate: "))
+    if new_id not in graph.getVertices():
+        # loop until user inputs valid x and y values
+        while True:
+            try:
+                x = int(input("Enter x-coordinate: "))
+                y = int(input("Enter y-coordinate: "))
 
-            # Check if a vertex already exists at (x, y)
-            if any(graph.getVertex(v).getX() == x and graph.getVertex(v).getY() == y for v in graph.getVertices()):
-                print(f"A vertex already exists at ({x}, {y}). Please enter different coordinates.")
-            else:
-                break  # Valid and unique coordinates, break loop
-        except ValueError:
-            print("Invalid input. Please enter integer values for x and y coordinates.")
+                # Check if a vertex already exists at (x, y)
+                if any(graph.getVertex(v).getX() == x and graph.getVertex(v).getY() == y for v in graph.getVertices()):
+                    print(f"A vertex already exists at ({x}, {y}). Please enter different coordinates.")
+                else:
+                    break  # Valid and unique coordinates, break loop
+            except ValueError:
+                print("Invalid input. Please enter integer values for x and y coordinates.")
 
-    vertex = Vertex(new_id, x, y)
-    graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
-    print(f"Vertex {new_id} added at ({x}, {y}).")
+        vertex = Vertex(new_id, x, y)
+        graph.addVertex(vertex.getId(), vertex.getX(), vertex.getY(), vertex.getHeuristic())
+        print(f"Vertex {new_id} added at ({x}, {y}).")
+    else:
+        print(f"Vertex {new_id} already exists.")
 
 def add_edge(graph):
     start_id = input("Enter start vertex ID: ")
@@ -123,7 +126,11 @@ def add_edge(graph):
     start = graph.getVertex(start_id)
     end = graph.getVertex(end_id)
 
-    if start and end:
+    if end in start.getConnections():
+        print(f"Edge between {start_id} and {end_id} already exists.")
+        return  # Exit the function without adding the edge
+
+    if start_id and end_id in graph.getVertices():
         undirected_connect(graph, start, end, weight)
         print(f"Edge between {start_id} and {end_id} added.")
     else:
@@ -133,7 +140,7 @@ def remove_vertex(graph):
     vertex_to_remove = input("Enter vertex id to remove: ")
 
     # Check if the vertex exists in the graph
-    if vertex_to_remove:
+    if vertex_to_remove in graph.getVertices():
         # Create a new empty graph
         new_graph = Graph()
 
@@ -208,7 +215,7 @@ def visualize_graph(graph):
     plt.title("Graph Visualization")
 
     # Draw the graph
-    nx.draw(nx_graph, pos, with_labels=True, node_color="orange", edge_color="grey", node_size=500, font_size=10,
+    nx.draw(nx_graph, pos, with_labels=True, node_color="lightblue", edge_color="grey", node_size=500, font_size=10,
             font_weight="bold")
 
     plt.show()
@@ -223,23 +230,26 @@ def visualize_path(graph, path, algorithm_name):
     # Optimal path visualization
     for i in range(len(path) - 1):
         # Base graph is drawn
-        nx.draw(nx_graph, pos, with_labels=True, node_color="orange", edge_color="grey", node_size=500, font_size=10,
+        nx.draw(nx_graph, pos, with_labels=True, node_color="yellow", edge_color="grey", node_size=500, font_size=10,
                 font_weight="bold")
 
         # Note to do the stuff from current node to the next node
         path_edge = [(path[i], path[i + 1])]
 
         # Highlights edges
-        nx.draw_networkx_edges(nx_graph, pos, edgelist=path_edge, edge_color="green", width=2)
+        nx.draw_networkx_edges(nx_graph, pos, edgelist=path_edge, edge_color="darkorange", width=2)
 
         # Highlights nodes
-        nx.draw_networkx_nodes(nx_graph, pos, nodelist=[path[i]], node_color="green", node_size=700)
+        nx.draw_networkx_nodes(nx_graph, pos, nodelist=[path[i]], node_color="darkorange", node_size=700)
 
         # Pause for a bit
         plt.pause(0.5)
 
+    nx.draw(nx_graph, pos, with_labels=True, node_color="yellow", edge_color="grey", node_size=500, font_size=10,
+            font_weight="bold")
+
     # Highlights goal
-    nx.draw_networkx_nodes(nx_graph, pos, nodelist=[path[-1]], node_color="yellow", node_size=700)
+    nx.draw_networkx_nodes(nx_graph, pos, nodelist=[path[-1]], node_color="red", node_size=700)
 
     # Prevents visualization from instantly closing
     plt.show()
